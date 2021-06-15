@@ -1,0 +1,33 @@
+https://www.youtube.com/watch?v=CusfUmB6mkY&t=10s
+https://www.youtube.com/watch?v=PQmu752Ifn8
+https://www.youtube.com/watch?v=2Y1GZHEJFHI
+
+cd..
+cd folder_name
+
+node -v: version
+
+npm uninstall -g angular-cli
+npm uninstall -g @angular/cli
+npm cache clean
+npm install -g @angular/cli@latest
+npm install -g @angular/cli@6
+npm install @angular/compiler-cli@6.1.7
+
+
+
+ng new bookapi : Create a workspace and download angular project.
+cd workspace
+ng serve --open/ng s --o : run angular project and open with default browser.
+
+book.ts: model class
+book.component.ts : like as controller class
+book.service.ts : hold business logic
+book.component.html : UI part
+
+***************************important points
+@Injectable(): decorator (In spring called annotation but in angular @ is called decorator)
+subscribe():
+pipe():
+map():
+JSON.stringify(): convert string to json object.

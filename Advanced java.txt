@@ -1,0 +1,177 @@
+https://www.edureka.co/blog/advanced-java-tutorial#JDBCArchitecture
+
+JDBC:JDBC(Java Database Connectivity) is a Java API that is used to connect and execute the query to the database. JDBC API uses JDBC drivers to connect to the database with Java programming language. 
+	 Java DataBase Connectivity API allows us to work with relational databases. We can use JDBC API to access tabular data stored in any relational database. 
+	 By the help of JDBC API(application program interface), we can save, update, delete and fetch data from the databases.
+	 
+JDBC Architecture: JDBC Architecture consists of two layers −
+	1. JDBC API(application program interface):
+	2.JDBC Driver API: JDBC Driver is a software component that enables Java application to interact with the database.
+	a JDBC driver makes it possible to do three things:
+		i. Establish a connection with a data source.
+		ii. Send queries and update statements to the data source.
+		iii. Process the results.
+		For example, the use of JDBC drivers enables you to open a database connection to interact with it by sending SQL or database commands.
+	There are 4 types of drivers, namely:
+		i.Type 1- JDBC-ODBC Bridge Diver- The JDBC-ODBC bridge driver uses the ODBC driver to connect to the database.
+		ii.Type 2- JDBC-Native API- The Native API driver uses the client-side libraries of the database. The driver converts JDBC method calls into native
+			calls of the database API. The Oracle Call Interface (OCI) driver is an example of a Type 2 driver.
+		iii. Type 3- Network Protocol Driver- This driver sends the JDBC calls to a middleware server that can connect to different type of databases.
+			We should have a middleware server installed to work with this driver.
+		iv. Type 4- Thin driver (fully java driver):In a Type 4 driver, a pure Java-based driver communicates directly with the vendor’s database through a socket connection.
+			This is the highest performance driver available for the database and is usually provided by the vendor itself.
+			MySQL’s Connector/J driver is a Type 4 driver. 
+	So here comes the question, which Driver should be used?
+	If you are accessing one type of database, such as Oracle, Sybase, or IBM, the preferred driver type is 4.
+	If your Java application is accessing multiple types of databases at the same time, type 3 is the preferred driver.
+	Type 2 drivers are useful in situations, where a type 3 or type 4 driver is not available yet for your database.
+	The type 1 driver is not considered a deployment-level driver and is typically used for experimental pourpose or when no other alternative is available.
+
+What are the steps to connect to the database in java?
+	
+	1.Import the packages: You need to include the packages containing the JDBC classes needed for database programming. Ex, using import java.sql.*
+	
+	2.Registering the driver class: The forName() method of the Class class is used to register the driver class. This method is used to load the driver class
+	dynamically into memory, which automatically registers it. This method is preferable because it allows you to make the driver registration configurable and portable.
+	The Class.forName() method returns the object of java.lang.Class object.	
+	
+			// JDBC driver name and database URL
+			static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+			static final String DB_URL = "jdbc:mysql://localhost/emp";
+			//step 2
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				}
+			catch(ClassNotFoundException ex) {
+					System.out.println("Error: unable to load driver class!");
+					System.exit(1);
+				}	
+	3. Creating connection: After you’ve loaded the driver, you can establish a connection using the DriverManager.getConnection() method of DriverManager class.
+		Syntax-   public static Connection getConnection(String url)throws SQLException  
+				  public static Connection getConnection(String url,String name,String password)throws SQLException 
+				  
+		MYSQL	       com.mysql.jdbc.Driver	     jdbc:mysql://hostname/ databaseName(A database URL is an address that points to your database.)	
+	
+	4. Creating the statement(Execute a query): The executeQuery() method of Statement interface is used to execute queries to the database. 
+	This method returns the object of ResultSet that can be used to get all the records of a table.	
+				  public ResultSet executeQuery(String sql)throws SQLException  
+	
+	5.Extract data from result set: Requires that you use the appropriate getXXX() method to retrieve the data from the result set.
+	
+		ResultSet rs=stmt.executeQuery("select * from emp");  
+			while(rs.next()){  
+			System.out.println(rs.getInt(1)+" "+rs.getString(2));  
+			}  
+		However, to perform the insert and update operations in the database, executeUpdate() method is used which returns the boolean value to 
+		indicate the successful completion of the operation.		  
+	
+	6.  At the end of your JDBC program, we have to close all the database connections to end each database session using close() method of Connection interface.
+		However, if you forget, Java’s garbage collector will close the connection when it cleans up stale objects.
+			public void close()throws SQLException  
+			con.close();  
+			
+	Complete Example: 
+				package Edureka;
+				import java.sql.*;
+				import java.sql.DriverManager;
+				public class Example {
+					// JDBC driver name and database URL
+					static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+					static final String DB_URL = "jdbc:mysql://localhost/emp";
+					//  Database credentials
+					static final String USER = "root";
+					static final String PASS = "";
+					public static void main(String[] args) {
+							Connection conn = null;
+							
+							try{
+									//STEP 2: Register JDBC driver
+									Class.forName("com.mysql.cj.jdbc.Driver");
+									
+									//STEP 3: Open a connection
+									conn = DriverManager.getConnection(DB_URL,"root","");
+									
+									//STEP 4: Execute a query
+									Statement stmt = conn.createStatement();
+									String sql = "SELECT id, first, last, age FROM Employees";
+									ResultSet rs = stmt.executeQuery(sql);
+									stmt.executeUpdate(sql);
+									
+									//STEP 5: Extract data from result set
+									while(rs.next()){
+									//Retrieve by column name
+									int id  = rs.getInt("id");
+									int age = rs.getInt("age");
+									}
+									//STEP 6: Clean-up environment
+									rs.close();
+									stmt.close();
+									conn.close();
+								}
+							}
+						}
+
+	
+What are the JDBC API components?
+	Interfaces:
+	Driver: Driver is an interface that handles the communications with the database server.
+	Connection: The Connection object is created by using getConnection() method of DriverManager class. DriverManager is the factory for connection.
+
+	Statement: The Statement object is created by using createStatement() method of Connection class. The Connection interface is the factory for Statement.
+
+	PreparedStatement: The PrepareStatement object is created by using prepareStatement() method of Connection class. It is used to execute the parameterized query.
+
+	ResultSet: The object of ResultSet maintains a cursor pointing to a row of a table. Initially, cursor points before the first row. The executeQuery() method
+	of Statement interface returns the ResultSet object.
+	
+	CallableStatement: CallableStatement interface is used to call the stored procedures and functions. We can have business logic on the database through the
+	use of stored procedures and functions that will make the performance better because these are precompiled. The prepareCall() method of Connection interface
+	returns the instance of CallableStatement.
+	
+	Classes:
+	DriverManager: The DriverManager class acts as an interface between the user and drivers. It keeps track of the drivers that are available and handles 
+	establishing a connection between a database and the appropriate driver. It contains several methods to keep the interaction between the user and drivers.
+	
+	SQLException It is an Exception class which provides information on database access errors.
+	
+	Blob: Blob stands for the binary large object. It represents a collection of binary data stored as a single entity in the database management system.
+	Clob: Clob stands for Character large object. It is a data type that is used by various database management systems to store character files.
+	
+What are the JDBC statements?
+
+	There is three type of JDBC statements:
+	i. Statement- Statement is the factory for resultset. It is used for general purpose access to the database. It executes a static SQL query at runtime.
+	ii. PreparedStatement- The PreparedStatement is used when we need to provide input parameters to the query at runtime.
+	iii. CallableStatement- CallableStatement is used when we need to access the database stored procedures. It can also accept runtime parameters.	
+	
+Servlet: 
+	i.A servlet is a Java programming language class that is used to extend the capabilities of servers and responds to the incoming requests.
+	  It can respond to any requests.	
+	ii.Servlet is a technology which is used to create a web application.
+	
+Life Cycle of Servlet:	
+	The entire life cycle of a Servlet is managed by the Servlet container which uses the javax.servlet.Servlet interface to understand the Servlet object
+	and manage it.
+	The Servlet life cycle mainly goes through four stages,
+
+	i.Loading a Servlet- The first stage of the Servlet life cycle involves loading and initializing the Servlet by the Servlet container.
+	ii.Initializing the Servlet- After the Servlet is instantiated successfully, the Servlet container initializes the instantiated Servlet object.
+		The container initializes the Servlet object by invoking the init(ServletConfig) method which accepts ServletConfig object reference as a parameter.
+	iii.Request handling- After initialization, the Servlet instance is ready to serve the client requests. Servlet container creates the ServletRequest and
+		ServletResponse. 
+		Ex,if the request is HTTP type then the Web container creates HttpServletRequest and HttpServletResponse objects which are subtypes of the ServletRequest
+		and ServletResponse objects respectively.
+	iv.Destroying the Servlet- After the destroy() method is executed, the Servlet container releases all the references of this Servlet instance so that
+    	it becomes eligible for garbage collection.
+
+JSP: Java Server Pages is a technology that is used to create web application just like Servlet technology. It is an extension to Servlet – 
+	as it provides more functionality than servlet such as expression language, JSTL, etc. A JSP page consists of HTML tags and JSP tags.	
+	The JSP pages follow these phases:
+
+	Translation of JSP Page
+	Compilation of JSP Page
+	Classloading (the classloader loads class file)
+	Instantiation (Object of the Generated Servlet is created)
+	Initialization ( the container invokes jspInit())
+	Request processing ( the container invokes _jspService())
+	Destroy ( the container invokes jspDestroy())

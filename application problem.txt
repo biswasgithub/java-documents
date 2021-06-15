@@ -1,0 +1,2 @@
+1.Field registrationService in com.registration.Controller.RegistrationController required a bean of type 'com.registration.service.RegistrationService' that could not be found.
+	Soln: add @service and @repository in service & DAO class respectively.
