@@ -1,0 +1,47 @@
+TreeSet achieves uniqueness internally through HashMap:
+https://javahungry.blogspot.com/2015/10/how-treeset-works-internally-in-java-interview-questions.html
+
+
+	Whenever you create an object of HashSet/TreeSet it will create an object of HashMap/TreeMap. 
+	
+	public TreeSet() {
+
+        this(new TreeMap<E,Object>());
+
+    }
+	When we pass an element in the add(Elemene E), then add() method call the HashMap put() method and pass this element in the put() method as a key.
+	Now, a value needs to be associated to the key. At the time of class loading, HashSet class create an object of Object type as a dummy value which is reffered by Object reference PRESENT.
+	.and this dummy value is passed in put() method as a value to the key.
+	
+			private static final Object PRESENT = new Object();  
+			
+			public boolean add(E e) {
+			return map.put(e, PRESENT)==null;
+		}
+	
+	Then put() method calculate hash value on the key using key.hashCode(). hashCode() functions return very high hash code value. In order to get the value
+	within the limits of table's array***, HashMap call hash() function and passed the object’s hash code to this hash(). This hash value is used to calculate index
+	position of the given element by calling indexFor(hash, table.length) method. Then HashMap check the calculated index position is null or not.
+	If it is null means key is not present in that position. So key is unique then put() method return null.
+	If the index position is not null means key is present in that position. So key is duplicate then put() method return Old value of the key. 	
+	Then the add(e) method of HashSet compare the return value of map.put(key,value) method with null.
+		
+		
+	If map.put(key,value) returns null, then map.put(e, PRESENT)==null will return true and element is added to the HashSet.
+
+	If map.put(key,value) returns the old value of the key, then map.put(e, PRESENT)==nullwill return false and element wont be added to the HashSet.
+
+	*** HashMap contains a array of table. 
+	
+	map.remove(o) return:
+		i. null, if key is not present.
+		ii. value , if the key is present on the map.
+
+	In HashSet remove(e) method, the return value of map.remove(o) method will be checked with PRESENT value.
+	
+	public boolean remove(Object o) {
+		return map.remove(o)==PRESENT;
+	}
+
+	if map.remove(o) retuen null, then null==PRESENT give false, that means object is not present HashSet.
+	if map.remove(o) retuen value, then value==PRESENT give true, So the given object will be deleted from HashSet. 

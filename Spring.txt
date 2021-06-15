@@ -1,0 +1,79 @@
+https://javarevisited.blogspot.com/2011/09/spring-interview-questions-answers-j2ee.html
+https://howtodoinjava.com/interview-questions/top-spring-interview-questions-with-answers/
+https://mindmajix.com/java-spring-interview-questions
+https://howtodoinjava.com/spring-aop/spring-aop-aspectj-example-tutorial-using-annotation-config/
+
+
+1.Spring: 
+Spring is an open source development framework for enterprise Java appication.It is light-weighted and loosely coupled.
+
+2.Features of Spring Framework
+Lightweight: Spring is lightweight when it comes to size and transparency. 
+Inversion of control (IOC): The objects give their dependencies instead of creating or looking for dependent objects. This is called Inversion Of Control.
+Aspect oriented Programming (AOP): Aspect oriented programming in Spring supports cohesive development by separating application business logic from system services.
+Container: Spring Framework creates and manages the life cycle and configuration of the application objects.
+MVC Framework: Spring Framework’s MVC web application framework is highly configurable. Other frameworks can also be used easily instead of Spring MVC Framework.
+Transaction Management: Generic abstraction layer for transaction management is provided by the Spring Framework. Spring’s transaction support can be also used in container less environments.
+JDBC Exception Handling: The JDBC abstraction layer of the Spring offers an exception hierarchy, which simplifies the error handling strategy.
+
+3.Modules:
+Spring Core Container – layer contains modules :Spring Core,Spring Bean,,Spring Context 
+Data Access/Integration – layer contains the following modules :
+JDBC (Java DataBase Connectivity),ORM (Object Relational Mapping),OXM (Object XML Mappers),Transaction
+Web – layer contains the following modules :Web – MVC,Web – Socket,Web – Portlet
+
+4.IoC
+The Spring IoC creates the objects, wire them together, configure them, and manage their complete lifecycle.
+by reading the configuration file that is provided either by XML, Java annotations.
+It minimizes the amount of code in your application.It makes your application easy to test as it doesn't require
+any singletons or JNDI lookup mechanisms in your unit test cases.
+There are two types of IoC containers. 
+BeanFactory- is like a factory class that contains a collection of beans. It instantiates the bean whenever asked for by clients.
+ApplicationContext- interface is built on top of the BeanFactory interface. It provides some extra functionality on top BeanFactory.
+
+5.DI
+ref: https://www.journaldev.com/2394/java-dependency-injection-design-pattern-example-tutorial
+https://www.journaldev.com/2410/spring-dependency-injection
+
+Dependency Injection (DI) is a design pattern that removes the dependency from the programming code so that it can be easy to manage 
+and test the application. Dependency Injection makes our programming code loosely coupled.
+ 
+In Dependency Injection, you do not have to create your objects but have to describe how they should be created. You don’t
+connect your components and services together in the code directly, but describe which services are needed by which components
+in the configuration file. The IoC container will wire them up together.
+
+	Constructor-based dependency injection − 
+	Constructor-based DI is accomplished when the container invokes a class constructor with a number of arguments, each representing a dependency on other class.
+
+	Setter-based dependency injection −
+	Setter-based DI is accomplished by the container calling setter methods on your beans after invoking a no-argument constructor or no-argument static factory
+	method to instantiate your bean.
+6.	
+
+	Class Department{
+		
+	}
+
+	Class Employee{
+		Department department;
+	}
+
+
+8.Inner Bean
+A bean can be declared as an inner bean only when it is used as a property of another bean.	
+
+
+Difference between constructor injection and setter injection?
+	1. In Setter Injection, partial injection of dependencies can possible, means if we have 3 dependencies like int, string, long, then its not necessary 
+		to inject all values if we use setter injection. If you are not inject it will takes default values for those primitives. 
+	  In constructor injection, partial injection of dependencies is not possible, because for calling constructor we must pass all the arguments right, 
+	  if not so we may get error.
+
+	2. Setter Injection will overrides the constructor injection value, provided if we write setter and constructor injection for the same property. 
+	   But, constructor injection cannot overrides the setter injected values. It’s obvious because constructors are called to first to create the instance.
+	3. Using setter injection you can not guarantee that certain dependency is injected or not, which means you may have an object with incomplete dependency.
+	   On other hand constructor Injection does not allow you to construct object, until your dependencies are ready.
+	   
+	4. In constructor injection, if Object A and B are dependent each other i.e A is depends on B and vice-versa, Spring throws ObjectCurrentlyInCreationException
+	   while creating objects of A and B because A object cannot be created until B is created and vice-versa. So spring can resolve circular dependencies 
+	   through setter-injection because Objects are constructed before setter methods invoked.   

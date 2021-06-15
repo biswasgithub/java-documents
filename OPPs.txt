@@ -1,0 +1,1058 @@
+How is Java platform independent?
+The meaning of platform independent is that, the java source code can run on all operating systems.
+
+Whenever, a program is written in JAVA,which is a human readable language.the machine does not understand. For the source code
+to be understood by the machine, it needs to be in a language understood by machines, typically a machine-level language.
+So, here comes the role of a compiler. The compiler converts the high-level language (human language) into a format understood
+by the machines. Therefore, a compiler is a program that translates the source code for another program from a programming language into executable code.
+The compiler translates .java file to .class file or the bytecode. This bytecode is a non-executable code and needs an interpreter to execute on a machine.
+JVM is the interpreter. so bytecode is interpreted and executed by JVM. And finally program runs on the JVM and give the desired output.
+Java is platform independent but JVM is platform dependent. Different JVM is designed for different OS and byte code is able to run on different OS.
+
+
+What is Java ClassLoader?
+	We know that Java Program runs on Java Virtual Machine (JVM).When we compile a Java Class, it transforms it in the form of bytecode that is platform and
+	machine independent compiled program and stores it as a .class file. After that when we try to use a Class, Java ClassLoader loads that class into memory.
+	There are three types of built-in ClassLoader in Java:
+
+	Bootstrap Class Loader – It loads JDK internal classes, typically loads rt.jar and other core classes for example java.lang.* package classes
+	Extensions Class Loader – It loads classes from the JDK extensions directory, usually $JAVA_HOME/lib/ext directory.
+	System Class Loader – It loads classes from current classpath.
+
+How does Java ClassLoader Work?
+	When JVM requests for a class, it invokes loadClass() function of the ClassLoader by passing the fully classified name of the Class.
+
+	loadClass() function calls for findLoadedClass() method to check that the class has been already loaded or not. 
+	It’s required to avoid loading the class multiple times.
+	If the Class is not already loaded then it will delegate the request to parent ClassLoader to load the class.
+	If the parent ClassLoader is not finding the Class then it will invoke findClass() method to look for the classes in the file system.
+
+
+https://beginnersbook.com/2013/04/oops-concepts/
+**********************************OOPs****************************
+OOP concepts in Java are the main ideas behind Java’s Object Oriented Programming. 
+They are an abstraction, encapsulation, inheritance, and polymorphism. Grasping them is key to understanding how Java works.
+ Basically, Java OOP concepts let us create working methods and variables, then re-use all or part of them without compromising security.
+
+List of OOP Concepts in Java
+There are four main OOP concepts in Java. These are: Abstraction, Encapsulation, Inheritance, Polymorphism.
+
+
+Object-oriented programming System(OOPs) is a programming paradigm based on the concept of “objects” that contain data and methods.
+The primary purpose of object-oriented programming is to increase the flexibility and maintainability of programs.
+Object oriented programming brings together data and its behaviour(methods) in a single location(object) 
+makes it easier to understand how a program works.
+
+************************Class
+A class is a user defined blueprint or prototype from which objects are created. 
+It represents the set of properties or methods that are common to all objects of one type.
+1.Top Level Class:
+	A top level class is a class that is not a nested class.Top level class can be only public, final, abstract. can not be protected, private type.
+	A nested class is any class whose declaration occurs within the body of another class or interface. 
+	A nested class can be declared private, public, protected, or package private(default).
+	
+2.Can a top level class be private or protected:
+	No. A top-level class as private would be completely useless because nothing would have access to it. 
+	If a top level class is declared as private the compiler will complain that the "modifier private is not allowed here" .
+	This means that a top level class cannot be private. Private classes are allowed but only as inner or nested classes. 
+	If you have a private inner or nested class, then access is restricted to the scope of that outer class.	
+
+***********************Constructor
+	Constructors are used to initialize the object’s state.
+	Constructor(s) of a class must have same name as the class name in which it resides.
+	A constructor in Java can not be abstract, final, static and Synchronized.
+	The constructor is called when an object of a class is created.
+
+	A constructor that has no parameter is known as default constructor. 
+	If we don’t define a constructor in a class, then compiler creates default constructor(with no arguments) for the class. 
+	And if we write a constructor with arguments or no-arguments then the compiler does not create a default constructor.
+
+	A constructor that has parameters is known as parameterized constructor. 
+	If we want to initialize fields of the class with your own values, then use a parameterized constructor.
+
+	If a class has private constructor then you cannot create the object of that class from outside of the class.
+
+	Private Constructor: The use of private constructor is to serve singleton classes. A singleton class is one which limits the number of objects creation to one.
+	Using private constructor we can ensure that no more than one object can be created at a time. By providing a private constructor you prevent class instances 
+	from being created in any place other than this very class.
+
+	Private constructor can't be accessed outside the class. If we want to get the instance of that class then we have to use a class
+	member instance and a factory method to return the class member.
+
+				class Person{
+					public Person() {
+						this(10);
+						System.out.println("Public constructor");
+					}
+					Person(int x){
+						System.out.println("perameterized constructor");
+					}
+					Object Person()/ void Person {
+						System.out.println("Void Constructor");
+						return new Person();
+					  }	 
+				}
+				public class Customer {
+					public static void main(String[] args) {	
+						Person person = (Person)new Person().Person();--- Void Constructor
+						new Person().Person();	
+					}	
+				}
+
+************************Object:
+Object is a bundle of data and its behaviour(often known as methods).
+Objects have two characteristics:
+	State : It is represented by attributes of an object.
+	Behavior : It is represented by methods of an object.
+			 
+			 
+*************************Assosiation, Aggregation,Composition
+Association establishes relationship between two separate classes through their objects.
+The relationship can be one to one, One to many, many to one and many to many.
+
+An Employee can have multiple Accounts so it could be one-to-many relation between Employee and Account: 
+
+Aggregation :
+If a class have an entity reference, it is known as Aggregation. Aggregation represents HAS-A relationship.
+Consider a situation, Employee object contains many informations such as id, name, emailId etc. 
+It contains one more object named address, which contains its own informations such as city, state, country, zipcode etc. as given below.
+
+It is a special form of Association where:
+It represents Has-A relationship.
+It is a unidirectional association i.e. a one way relationship. For example, department can have students but vice versa is not possible and thus unidirectional in nature.
+In Aggregation, both the entries can survive individually which means ending one entity will not effect the other entity
+
+public class Address {  
+String city,state,country;  
+  
+public Address(String city, String state, String country) {  
+    this.city = city;  
+    this.state = state;  
+    this.country = country;  
+}  
+  
+}  
+
+public class Emp {  
+int id;  
+String name;  
+Address address;  
+  
+public Emp(int id, String name,Address address) {  
+    this.id = id;  
+    this.name = name;  
+    this.address=address;  
+}  
+  
+void display(){  
+System.out.println(id+" "+name);  
+System.out.println(address.city+" "+address.state+" "+address.country);  
+}  
+  
+public static void main(String[] args) {  
+Address address1=new Address("gzb","UP","india");  
+Address address2=new Address("gno","UP","india");  
+  
+Emp e=new Emp(111,"varun",address1);  
+Emp e2=new Emp(112,"arun",address2);  
+      
+e.display();  
+e2.display();  
+      
+}  
+}  
+
+Combination represents part-of relationship.In composition, both the entities are dependent on each other. 
+When there is a composition between two entities, the composed object cannot exist without the other entity.
+Ex:Human and Heart. A human needs heart to live and a heart needs a Human body to survive.
+
+// Engine class which will  
+// be used by car. so 'Car' 
+// class will have a field  
+// of Engine type. 
+class Engine  
+{ 
+    // starting an engine. 
+    public void work() 
+    { 
+          
+        System.out.println("Engine of car has been started "); 
+          
+    } 
+      
+} 
+  
+// Engine class 
+final class Car  
+{ 
+      
+    // For a car to move,  
+    // it need to have a engine. 
+    private final Engine engine; // Composition 
+    //private Engine engine;     // Aggregation 
+      
+    Car(Engine engine) 
+    { 
+        this.engine = engine; 
+    } 
+      
+    // car start moving by starting engine 
+    public void move()  
+    {   
+        //if(engine != null) 
+        { 
+            engine.work(); 
+            System.out.println("Car is moving "); 
+        } 
+    } 
+} 
+  
+class GFG  
+{ 
+    public static void main (String[] args)  
+    { 
+          
+        // making an engine by creating  
+        // an instance of Engine class. 
+        Engine engine = new Engine(); 
+          
+        // Making a car with engine. 
+        // so we are passing a engine  
+        // instance as an argument while 
+        // creating instace of Car. 
+        Car car = new Car(engine); 
+        car.move(); 
+          
+    } 
+} 
+
+***************************************Encapsulation
+	binding object state(fields) and behaviour(methods) together.
+	The whole idea behind encapsulation is to hide the implementation details from users. If a data member is private it means it can only be accessed within
+	the same class. No outside class can access private data member (variable) of other class.
+	Make the instance variables private so that they cannot be accessed directly from outside the class. You can only set and get values of these variables
+	through the methods of the class. Have getter and setter methods in the class to set and get the values of the fields.their implementation hidden for
+	outside classes. That’s why encapsulation is known as data hiding.
+
+
+**********************************************Abstraction***********************************************
+
+	Abstraction is a process where you show only “relevant” data and “hide” unnecessary details of an object from the user.       
+	For example, when you login to your Amazon account online, you enter your user_id and password and press login, 
+	what happens when you press login, how the input data sent to amazon server, how it gets verified is all abstracted away from the you.
+
+
+
+***************************************Abstract class ******************************************
+
+Important Keyword:
+	1.A class that is declared using “abstract” keyword is known as abstract class. 
+	
+	2.It can have abstract methods(methods without body) as well as concrete methods (regular methods with body).
+	It is not mandatory abstract class must have a abstract method.
+	
+	3.Abstract class cannot be instantiated which means you cannot create the object of it.we can have references of abstract class type though.
+	To use this class, you need to create another class that extends this this class and provides the implementation of abstract methods, 
+	then you can use the object of that child class to call non-abstract methods of parent class as well as implemented methods
+	
+	4.A class derived from the abstract class must implement all those methods that are declared as abstract in the parent class.
+	5.If a child does not implement all the abstract methods of abstract parent class, then the child class must need to be declared abstract as well.
+	6.an abstract class can contain constructors in Java. And a constructor of abstract class is called when an instance of a inherited class is created.	
+	7.Since abstract class allows concrete methods as well, it does not provide 100% abstraction. 
+	8.Abstract classes can also have final methods (methods that cannot be overridden).
+	9.Class can be either abstract or final but not both.
+	
+Abstract class can also have constructor:
+	The reason why it is there because in the concept of inheritance you have to maintain class hierarchy,
+	means if your class extends abstract class then the same abstract class will become super class for your 
+	extending class and remember when you have constructor of your class then first line of your constructor 
+	is always super class constructor and this is the time when your abstract class constructor get called.	
+
+Abstract method:
+	Abstract method is just a signature without any implementation block inside.
+	Abstract method must be overridden in the subclasses to make use for the object to invoke.
+	An Abstract Method is just a prototype for the method with the following attributes:-
+	1) A return type
+	2) A name
+	3) A list of Parameters
+	4) A throws clause which is optional
+
+Can you make an Abstract Class/Method Final in Java?
+	No, you cannot make an abstract class or method final in Java because An abstract class is incomplete and can only be instantiated by extending
+	a concrete class and implementing all abstract methods. a final class is considered as complete and cannot be extended further.This means when you make an abstract class final, 
+	it cannot be extended 
+	
+Encapsulation vs Data Abstraction
+	Encapsulation is data hiding(information hiding) while Abstraction is detail hiding(implementation hiding).
+	While encapsulation groups together data and methods that act upon the data, data abstraction deals with exposing the interface to the user and hiding
+	the details of implementation.
+
+Advantages of Abstraction
+	It reduces the complexity of viewing the things.
+	Avoids code duplication and increases reusability.
+	Helps to increase security of an application or program as only important details are provided to the user.	
+	
+	
+	
+*********************************************** Interface ***********************************************
+	
+	Interfaces specify what a class must do and not how. It is the blueprint of the class. It is used for full abstraction.
+	Since java does not support multiple inheritance in case of class, but by using interface it can achieve multiple inheritance .
+	It is also used to achieve loose coupling. 
+	Interfaces are used to implement abstraction. So the question arises why use interfaces when we have abstract classes?
+	The reason is, abstract classes may contain non-final variables, whereas variables in interface are final, public and static.
+
+	important keyword about interface:
+	1) We can’t instantiate an interface in java. That means we cannot create the object of an interface. All the methods are public and abstract. 
+	   And all the fields are public, static, and final.
+	2) Interface provides full abstraction as none of its methods have body. On the other hand abstract class provides partial abstraction
+	   as it can have abstract and concrete(methods with body) methods both.
+	3) implements keyword is used by classes to implement an interface.
+	4) While providing implementation in class of any method of an interface, it needs to be mentioned as public.
+	5) Class that implements any interface must implement all the methods of that interface, else the class should be declared abstract.
+	6) Interface cannot be declared as private, protected or transient.
+	9) Interface variables must be initialized at the time of declaration otherwise compiler will throw an error.
+	11) An interface can extend any interface but cannot implement it. Class implements interface and interface extends interface.
+	12) A class can implement any number of interfaces.
+	13) If there are two or more same methods in two interfaces and a class implements both interfaces, implementation of the method once is enough.
+	14) A class cannot implement two interfaces that have methods with same name but different return type.
+	15. default method accessed by directly method name or interfaceName.super.defaultMethod() from implemented class.
+
+	Can interface be final?
+	No. We can not instantiate interfaces, so in order to make interfaces
+	useful we must create subclasses. The final keyword makes a class unable
+	to be extended.
+
+New features added in interfaces in JDK 8:
+	1.Prior to JDK 8, interface could not define implementation. We can now add default implementation for interface methods. 
+	 This default implementation has special use and does not affect the intention behind interfaces.
+	Suppose we need to add a new function in an existing interface. Obviously the old code will not work as the classes have not implemented those new functions.
+	So with the help of default implementation, we will give a default body for the newly added functions. Then the old codes will still work.
+	
+	2.Another feature that was added in JDK 8 is that we can now define static methods in interfaces which can be called independently without an object.
+	Note: these methods are not inherited.
+
+*************************************************Interface Vs Abstract Class***********************************************
+
+					Abstract Class	 																Interface
+1	 An abstract class can extend only one class or one abstract class at a time.	 			An interface can extend any number of interfaces at a time
+2	  An abstract class can extend another concrete (regular) class or abstract class.	 		An interface can only extend another interface
+3	 An abstract class can have both abstract and concrete methods.	 							An interface can have only abstract methods
+4	 In abstract class keyword “abstract” is mandatory to declare a method as an abstract.		In an interface keyword “abstract” is optional to declare a method as an abstract
+5	 An abstract class can have protected and public abstract methods.	 						An interface can have only have public abstract methods
+6	 An abstract class can have static, final or static final variable with any access 			An interface can only have public static final (constant) variable
+    specifier 		
+
+	
+
+********************************************Polymorphism ***********************************************
+	It allows us to perform a single action in different ways. The ability of an object to behave differently for the same method call is called polymorphism.
+	Types: 
+	i>Static polymorphism(compile time polymorphism): Polymorphism that is resolved during compiler time is known as static polymorphism.
+	Method overloading is one of the way java supports static polymorphism.
+	
+	ii>Dynamic polymorphism(runtime polymorphism):It is also known as Dynamic Method Dispatch. Method Overriding is an example of runtime polymorphism.
+	Dynamic polymorphism is a process in which a call to an overridden method is resolved at runtime, thats why it is called runtime polymorphism.
+	When an overridden method is called through a superclass reference, Java determines which version(superclass/subclasses) of that method is to be
+	executed is determined by the type of object being referred to at the time the call occurs.. Thus, this determination is made at run time.
+	
+	Dynamic method dispatch allow Java to support overriding of methods which is central for run-time polymorphism.
+	It allows a class to specify methods that will be common to all of its derivatives, while allowing subclasses to define the specific implementation of some or all of those methods.
+	It also allow subclasses to add its specific methods subclasses to define the specific implementation of some.
+	
+
+********************************************Dynamic Bind and Static Bind ***********************************************
+
+The binding which can be resolved at compile time by compiler is known as static or early binding. 
+When compiler is not able to resolve the call/binding at compile time, such binding is known as Dynamic or late Binding.
+
+
+i> Static binding happens at compile-time while dynamic binding happens at runtime.
+ii> private, static and final methods always happen at compile time since these methods cannot be overridden bounded by compiler.
+Overriding methods using dynamic binding.
+iii> Overloded methods are resolved using static binding.Overriding methods are resolved using dynamic binding.	
+
+
+**************************Overloading****************************
+
+	Method Overloading is a feature that allows a class to have more than one method having the same name, 
+	but their method singnature are differ by numbers of parameters, types of parameters, sequence of data types of parametrs.
+	return type is not considerd. 
+	
+	Rules: ‘myMethod()’ has three different forms. All are throwing different exceptions, but have same signature. Is it OK? It is not Ok. You will get duplicate method error.
+	
+	In a class, one method has two overloaded forms. One form is defined as static and another form is defined as non-static.
+	Is that method properly overloaded?--- Yes. Compiler checks only method signature to verify whether a particular method is properly overloaded or not. 
+	It doesn’t check static or non-static feature of the method.
+	
+Can we overload static methods?
+	The answer is ‘Yes’. We can have two ore more static methods with same name, but differences in input parameters. For example, consider the following Java program. Refer this for details.
+
+Can we overload methods that differ only by static keyword?
+	We cannot overload two methods in Java if they differ only by static keyword (number of parameters and types of parameters is same). See following Java program for example. Refer this for details.
+
+Note: Since char is not available, so the datatype higher than char in terms of range is int.
+        // 
+        //  
+
+************************Overriding**********************
+
+	method overriding: Declaring a method in sub class which is already present in parent class is known as method overriding. 
+	Overriding is done so that a child class can give its own implementation to a method which is already provided by the parent class.
+	Return type is consederd for method overriding.
+	Why method overriding is called late binding or dynamic binding- Because object used for binding will be known only at run time.
+
+Rules for Method overriding:
+	i> Final methods can not be overridden : If we don’t want a method to be overridden, we declare it as final.
+	ii>Static methods can not be overridden(Method Overriding vs Method Hiding) : When you defines a static method with same signature 
+		as a static method in base class, it is known as method hiding. Parent class static method hides the child class static method.
+	iii>Private methods can not be overridden.
+	iv>The overriding method must have same return type (or subtype) : it is possible to have different return type for a overriding method in child class,
+		but child’s return type should be sub-type of parent’s return type. This phenomena is known as covariant return type.
+	v> Invoking overridden method from sub-class using super keyword.
+	vi> Overriding and constructor : We can not override constructor as parent and child class can never have constructor with same name
+	    (Constructor name must always be same as Class name).
+	vii>Overriding and abstract method : Abstract methods in an interface or abstract class are meant to be overridden in derived concrete classes
+		otherwise compile-time error will be thrown.
+	viii> Overriding and Exception-Handling : Below are two rules to note when overriding methods related to exception-handling.
+		Rule#1 : If the super-class overridden method does not throws an exception, subclass overriding method can only throws the unchecked exception, 
+		throwing checked exception will lead to compile-time error.
+				class Parent 
+				{ 
+					void m1() { System.out.println("From parent m1()");} 
+					
+					void m2() { System.out.println("From parent m2()"); } 
+				} 
+
+				class Child extends Parent 
+				{ 
+					@Override
+					// no issue while throwing unchecked exception 
+					void m1() throws ArithmeticException 
+					{ System.out.println("From child m1()");} 
+					
+					@Override
+					// compile-time error 
+					// issue while throwin checked exception 
+					void m2() throws Exception{ System.out.println("From child m2");} 
+					
+				} 
+		Rule#2 : If the super-class overridden method does throws an exception, subclass overriding method can only throw same, subclass exception. 
+		Throwing parent exception in Exception hierarchy will lead to compile time error.Also there is no issue if subclass overridden method is not
+		throwing any exception.		
+	vi>If you create object of subclass with reference of super class like ( A a = new B();) then only subclass's overridden method can access by reference
+	variable and super class method and variable can be accessed by reference variable.
+
+Private methods can not be overridden : 
+	Private methods cannot be overridden as they are bonded during compile time. Therefore we can’t even override private methods in a subclass.
+
+The overriding method must have same return type (or subtype) : 
+	From Java 5.0 onwards it is possible to have different return type for a overriding method in child class, but child’s return type should be sub-type of
+	parent’s return type. This phenomena is known as covariant return type.
+	
+					class Base 
+					{ 
+						A fun() 
+						{ 
+							System.out.println("Base fun()"); 
+							return new A(); 
+						} 
+					}   
+					class Derived extends Base 
+					{ 
+						B fun() 
+						{ 
+							System.out.println("Derived fun()"); 
+							return new B(); 
+						} 
+					}   
+					public class Main 
+					{ 
+						public static void main(String args[]) 
+						{ 
+						   Base base = new Base(); 
+						   base.fun(); 
+					  
+						   Derived derived = new Derived(); 
+						   derived.fun(); 
+						} 
+					} 
+
+Overriding and constructor : 
+	We can not override constructor as parent and child class can never have constructor with same name(Constructor name must always be same as Class name).
+
+Following are some important points for method overriding and static methods in Java.
+1) For class (or static) methods, the method according to the type of reference is called, not according to the object being referred, which means method call is decided at compile time.
+
+2) For instance (or non-static) methods, the method is called according to the type of object being referred, not according to the type of reference, which means method calls is decided at run time.
+
+3) An instance method cannot override a static method, and a static method cannot hide an instance method.
+
+					class Parent{
+						public static void display() {
+							System.out.println("Static or class method from Base");
+						}
+						
+						// Non-static method which will be overridden in derived class  
+						public void print()  { 
+							 System.out.println("Non-static or Instance method from Base"); 
+						} 
+					}
+
+					class Child extends Parent {
+						
+						// Static is removed here (Causes Compiler Error)
+						public void display() { 
+							System.out.println("Non-static method from Derived"); 
+						}
+						
+						// Static is added here (Causes Compiler Error) 
+						public static void print() { 
+							System.out.println("Static method from Derived"); 
+						} 
+						
+						//overload method is unique to Child class.
+						public void display(int x) { 
+							System.out.println("Non-static method from Derived"); 
+						}
+					}
+
+4) In a subclass (or Derived Class), we can overload the methods inherited from the superclass. Such overloaded methods neither hide nor override the superclass methods — they are new methods, unique to the subclass.
+
+
+
+Overloading vs Overriding:
+	i>Overloading happens at compile-time while Overriding happens at runtime
+	ii>Static methods can be overloaded which means a class can have more than one static method of same name. Static methods cannot be overridden
+	iii>overloading is being done in the same class while for overriding base and child classes are required.
+	iv>In overloading method names are same but method signatures are different but in Overriding method names,method signatures and return type must be same for both parent class and child class.
+	v>private and final, static methods can be overloaded but they cannot be overridden. 
+
+
+************************** Inheritance ***********************************************
+
+	Inheritance is an important pillar of OOP(Object Oriented Programming). It is the mechanism in java by which one class is allow to inherit the features
+	(fields and methods) of another class.
+
+	Important terminology:
+
+	Super Class: The class whose features are inherited is known as super class(or a base class or a parent class).
+	Sub Class: The class that inherits the other class is known as sub class(or a derived class, extended class, or child class). 
+				The subclass can add its own fields and methods in addition to the superclass fields and methods.
+	Reusability: Inheritance supports the concept of “reusability”, i.e. when we want to create a new class and there is already a class that includes some 
+				of the code that we want, we can derive our new class from the existing class. By doing this, we are reusing the fields and methods of the
+				existing class.
+	Note: The biggest advantage of Inheritance is that the code that is already present in base class need not be rewritten in the child class.	
+
+	Single Inheritance: refers to a child and parent class relationship where a class extends the another class. 
+	Multilevel inheritance: 
+		Refers to a child and parent class relationship where a class extends the child class.For example class C extends class B and class B extends class A.
+		In Java,for overridden method a class cannot directly access the grandparent’s members.we can access grandparent’s members only through the parent class.
+		For non-overridden methods Child class can directly access GrandParent/Parents members.
+							
+	Hierarchical inheritance: refers to a child and parent class relationship where more than one classes extends the same class. 
+							For example, classes B, C & D extends the same class A.	
+	Multiple Inheritance: one class extending more than one classes, which means a child class has two parent classes.
+
+	Hybrid inheritance: Combination of more than one types of inheritance in a single program. 
+						For example class A & B extends class C and another class D extends class A then this is a hybrid inheritance example
+					because it is a combination of single and hierarchical inheritance. 						
+						
+
+
+What all can be done in a Subclass?
+	The inherited fields can be used directly, just like any other fields.
+	We can declare new fields in the subclass that are not in the superclass.
+	The inherited methods can be used directly as they are.
+	We can write a new instance method in the subclass that has the same signature as the one in the superclass,
+		thus overriding it (as in example above, toString() method is overridden).
+	We can write a new static method in the subclass that has the same signature as the one in the superclass, thus hiding it.
+	We can declare new methods in the subclass that are not in the superclass.
+	We can write a subclass constructor that invokes the constructor of the superclass, either implicitly or by using the keyword super.
+
+Upcasting: Converting a subclass type to a superclass type is known as up casting. A superclass reference variable can refer to a subclass object
+Down-casting: Converting a superclass type to a subclass type is known as downcasting.
+				class Parent {
+					public void callme()
+					{
+						System.out.println("In callme of Animal");
+					}
+				}
+				class Child extends Parent{
+					public void callme()
+					{
+						System.out.println("In callme of Dog");
+					}
+					public void callme2()
+					{
+						System.out.println("In callme2 of Dog");
+					}
+				}
+				public class InheritanceClass {
+					public static void main(String[] args) {
+						Parent p = new Child();
+						Child c = (Child)p;  ----->>>> Down-casting. Now we can access child class method's(callme2()) without creating new child object.
+						c.callme2(); 	               Without this we can't access child class method's by Parent type reference.   
+					}
+
+Multiple Inheritance in java :
+
+	Suppose we have a Bank class that provides the functionality to get the rate of interest. 
+	So we declared a method RateOfInterest() method. the rate of interest varies according to banks.
+	Now we create another two class say- SBIBank and AxisBank, these two bank classes
+	extend Bank class and override the RateOfInterest() method and give their own implementation. 
+	This is the example of method overriding.
+
+	After few days, SBI and AxisBank have deceided they will give credit facility to their customer. 
+	So if we create another class that provides the functionality to apply create card. In java a class can't extend more than one parent class.
+	We can avoid this issue by using Interface. because in java a class can implement more than one interface.
+	So we create an interface and declare a method for applyingCreditCard in our Interface; then SBIBank and AxisBank can implement that interface
+	and can override that method and give their own implementation. 						
+	
+	
+
+Why Java does not support multiple inheritance:
+
+Multiple Inheritance is a feature of object oriented concept, where a class can inherit properties of more than one parent class. 
+The problem occurs when there exist methods with same signature in both the super classes and subclass. On calling the method,
+the compiler cannot determine which class method to be called and even on calling which class method gets the priority.This problem is known as Diamond Problem.
+Therefore, in order to avoid such complications Java does not support multiple inheritance of classes.
+ 
+class GrandParent 
+{ 
+	void fun() 
+    { 
+        System.out.println("Grandparent"); 
+    } 
+} 
+class Parent1 extends GrandParent 
+{ 
+    void fun() 
+    { 
+        System.out.println("Parent1"); 
+    } 
+} 
+class Parent2 extends GrandParent 
+{ 
+    void fun() 
+    { 
+        System.out.println("Parent2"); 
+    } 
+} 
+// Error : Test is inheriting from multiple 
+// classes 
+class Test extends Parent1, Parent2 
+{ 
+   public static void main(String args[]) 
+   { 
+       Test t = new Test(); 
+       t.fun(); 
+   } 
+} 
+
+How are above problems handled for Default Methods and Interfaces ?
+
+1.
+Multiple inheritance in Java programming is achieved or implemented using interfaces. Java does not support multiple inheritance using classes.
+In simple term, a class can inherit only one class and multiple interfaces in a java programs. In java terminology, we can say that
+“A class can extend only one class but it can implement multiple interfaces.”
+
+not allowed:    class A{}
+				class B{}
+				class C extends A,B{}
+
+Allowed: 			class A{}
+					interface IB{}
+					interface IC{}
+
+					class D extends A implements IB, IC{}
+
+2.
+Java 8 supports default methods where interfaces can provide default implementation of methods. And a class can implement two or more interfaces.
+ In case both the implemented interfaces contain default methods with same method signature, the implementing class should explicitly specify
+ which default method is to be used or it should override the default method.
+	
+interface PI1 
+{ 
+	// default method 
+	default void show() 
+	{ 
+		System.out.println("Default PI1"); 
+	} 
+} 
+interface PI2 
+{ 
+	// Default method 
+	default void show() 
+	{ 
+		System.out.println("Default PI2"); 
+	} 
+} 
+class TestClass implements PI1, PI2 
+{ 
+	// Overriding default show method 
+	public void show() 
+	{ 
+		// use super keyword to call the show 
+		// method of PI1 interface 
+		PI1.super.show(); 
+
+		// use super keyword to call the show 
+		// method of PI2 interface 
+		PI2.super.show(); 
+	} 
+
+	public static void main(String args[]) 
+	{ 
+		TestClass d = new TestClass(); 
+		d.show(); 
+	} 
+} 	
+Note: If we remove implementation of default method from “TestClass”, we get compiler error. 
+
+	
+*****************************************Keyword**************************************************
+	
+**********************Static
+	In Java, static keyword is mainly used for memory management. It can be used with variables, methods, blocks and nested classes. 
+	It is a keyword which is used to share the same variable or method of a given class. Basically, static is used for a constant variable or a method 
+	that is same for every instance of a class. The main method of a class is generally labeled static.
+
+	Real world example of Why do we use static keywords:- Suppose you are making an app for a bank, every person has different account number in the bank 
+	but rate of interest is same for all . So, you need to make the rate of interest Static as its common for all. You can make account number instance ,
+	which will have different copies for different objects(i.e persons in this case which have a/c numbers). That’s why we use static keyword
+
+	We use static keyword in java so that we can save our memory and make memory efficient. In other words, it is used for memory management.
+	Static keyword can be used with class, variable, method and block.Static members belong to the class level. so we can access static members using class name.
+
+Static Block - is used for initializing the static variables.This block gets executed when the class is loaded in the memory.
+				A class can have multiple Static blocks, which will execute in the same sequence in which they have been written into the program.
+				Java static block is executed before the main() method at the class loading time.
+				It is also used to initialize the static data members. Static block belongs to the class level. 
+static variable-When a variable is declared as static, then a single copy of variable is created and shared among all objects at class level. 	
+				Unlike non-static variables, such variables can be accessed directly in static and non-static methods.
+				points:cannot declare static variable inside a static/non-static method.
+				Java static variable gets memory only once class area(method area) at the time of class loading.
+				Static variable is a class level variable. When we want to refer common property to all the objects then we use static variable
+				e.g student name and roll no may be different but student's school name will be same for all the students.
+				static block and static variables are executed in order they are present in a program.
+				
+static method-When a method is declared with static keyword, it is known as static method. They can only directly access static data and other static methods. 
+			  non-static methods and non-static variables can only be accessed using objects in static method.
+			  A static method can access only static data. It can not access non-static data (instance variables)
+			  A static method can call only other static methods and can not call a non-static method from it.
+			  points:Non-static methods directly access static/non-static methods and static/non-static variables.
+			  Methods declared as static have several restrictions:
+
+				They can only directly call other static methods.
+				They can only directly access static data.
+				They cannot refer to this or super in any way.
+Static Class: A class can be made static only if it is a nested class. An instance of an inner class cannot be created without an instance of the outer class. 
+			 A static class can access only the static members of the outer class. static nested class cannot directly access non-static member(Compilation Error)
+				class MyOuter {
+				   static class Nested_Demo {
+				   }
+				}	
+			  Object creation: OuterClass.StaticNestedClass nestedObject = new OuterClass.StaticNestedClass();
+
+static nested classes vs non-static nested classes:
+		static nested class : Nested classes that are declared static are called static nested classes.
+		inner class : An inner class is a non-static nested class.
+	1. A static nested class may be instantiated without instantiating its outer class. To instantiate an inner class, you must first instantiate the outer class. Then, 
+		create the inner object within the outer object. Ex: OuterClass.InnerClass innerObject = outerObject.new InnerClass();
+	2. non-static nested classes: Both static and non static members of outer class can be accessed directly.	
+	   static nested classes: Only a static member of outer class can be accessed directly.
+	3. Inside normal/regular inner class, static members can’t be declared. Inside static nested class, static members can be declared.
+	4. As main() method can’t be declared, regular inner class can’t be invoked directly from the command prompt.
+		As main() method can be declared, the static nested class can be invoked directly from the command prompt.
+		
+
+Anonymous inner class : It is an inner class without a name and for which only a single object is created. An anonymous inner class can be useful when making 
+			an instance of an object with certain “extras” such as overloading methods of a class or interface, without having to actually subclass a class.
+			there is no need to write a  separate class to implement the method.
+
+			Age oj1 = new Age() {
+						@Override
+						public void getAge() {
+							System.out.print("Age is "+x);
+						}
+					};
+		  
+When to use static variables and methods?
+	Use the static variable for the property that is common to all objects. For example, in class Student, all students shares the same college name.
+	Use static methods for changing static variables.
+
+What if static variable refers to an Object ?
+	static int i = 1;
+	static Object obj = new Object();
+	In first line,  the value 1 would be stored in PermGen section. In second line, the reference obj would be stored in PermGen section and
+	the Object it refers to would be stored in heap section.
+
+When to use static methods ??
+	When you have code that can be shared across all instances of the same class, put that portion of code into static method.
+	They are basically used to access static field(s) of the class.			  
+			
+	
+Instance method vs Static method:
+	Instance method can access the instance methods and instance variables directly.
+	Instance method can access static variables and static methods directly.
+	Static methods can access the static variables and static methods directly.
+	Static methods can’t access instance methods and instance variables directly. They must use reference to object. And static method can’t use this keyword as there is no instance for ‘this’ to refer to.	
+			
+			
+static Class- A class can be made static only if it is a nested class.Nested static class doesn’t need reference of Outer class
+			  A static class cannot access non-static members of the Outer class.
+			 OuterClass.MyNestedClass obj = new OuterClass.MyNestedClass();	
+
+Assigning values to static final variables in Java:
+	In Java, non-static final variables can be assigned a value either in constructor or with the declaration. But, 
+	static final variables cannot be assigned value in constructor; they must be assigned a value with their declaration or inside static block.
+	Ex1.Since i is static final,it must be assigned value here or inside static block . 
+		static final int i; 
+		static
+		{ 
+			i = 10; 
+		} 
+	Ex2.i could be assigned a value here or constructor or init block also. 
+		final int i; 
+		Test() 
+		{ 
+			i = 10; 
+		} 
+
+
+1. Super:
+		i>Use of super with methods: This is used when we want to call parent class method. So whenever a parent and child class have
+		same named methods then to resolve ambiguity we use super keyword.
+		ii>To access the data members of parent class when both parent and child class have member with same name.
+		iii>To explicitly call the no-arg and parameterized constructor of parent class. Super() must be the first statement.
+		It happens because compiler itself adds super()(this invokes the no-arg constructor of parent class) as the first statement in the
+		constructor of child class.
+
+		
+2.this keyword:
+	i>Using ‘this’ keyword to refer current class instance variables.
+	ii>This occurs if a Class has two overloaded constructors, one without argument and another with the argument. Then “this” keyword
+	can be used to call the constructor with an argument from the constructor without argument. This is required as the constructor cannot be called explicitly.
+	Test{
+		Test() 
+		{   
+			this(10, 20); 
+			System.out.println("Inside  default constructor \n"); 
+		} 
+		Test(int a, int b) 
+		{ 
+			this.a = a; 
+			this.b = b; 
+			System.out.println("Inside parameterized constructor"); 
+		} 
+	}
+	
+	
+	
+	iii>Using ‘this’ keyword to return the current class instance.
+	
+	Test{
+		Test get() 
+		{ 
+			return this; 
+		} 
+	}
+	iv>Using ‘this’ keyword to invoke current class method.
+	Test{
+		void display() 
+		{ 
+			// calling fuction show() 
+			this.show(); 
+		 
+		   System.out.println("Inside display function"); 
+		} 
+		  
+		void show() { 
+			System.out.println("Inside show funcion"); 
+		} 
+	}
+
+3.Final keyword:
+		i>Final variable: Variable with final keyword. We must initialize a final variable. 
+		ii>Final Class: When a class is declared with final keyword, it is called a final class. All Wrapper Classes like Integer,Float etc. are final classes. 
+		We can not extend them. A final class cannot be extended(inherited).The other use of final with classes is to create an immutable class like the predefined String class.
+		iii>Final Method: When a method is declared with final keyword, it is called a final method. A final method cannot be overridden.
+	Final Vs Abstract: For classes, final is used to prevent inheritance whereas abstract classes depends upon their child classes for complete implementation.
+	In cases of methods, final is used to prevent overriding whereas abstract methods needs to be overridden in sub-classes.	
+	
+4.Transient keyword: At the time of serialization, if we don’t want to save value of a particular variable in a file, then we use transient keyword. 
+5.volatile: Using volatile is yet another way (like synchronized, atomic wrapper) of making class thread safe.
+ Thread safe means that a method or class instance can be used by multiple threads at the same time without any problem.	
+	
+*********************************Finally and Finalize********************************
+Finally block: So basically the use of finally block is resource deallocation. Means all the resources such as Network Connections, Database Connections, 
+which we opened in try block are needed to be closed, so that we won’t lose our resources as opened. So those resources are needed to be closed in finally block.	
+	
+Finalize: It is a method that the Garbage Collector always calls just before the deletion/destroying the object which is eligible for Garbage Collection.
+		  It performs some clean up operation on the object that will be destroyed. Once finalize method completes immediately Garbage Collector destroy that object. 
+		  Clean-up activity means closing the resources associated with that object like Database Connection.
+		  protected void finalize throws Throwable{}
+	
+
+	
+	
+
+	
+
+********************************** Access modifiers
+	An access modifier restricts the access of a class, constructor, data member and method in another class.
+	In java we have four access modifiers:
+	1. default-When we do not mention any access modifier, it is called default access modifier. The scope of this modifier is limited to the package only.
+	2. private-Private Data members and methods are only accessible within the class.
+	3. protected-Protected data member and method are only accessible by the classes of the same package and the subclasses present in any package.
+	4. public-The members, methods and classes that are declared public can be accessed from anywhere.
+
+	Note: When no access modifier is used, then by default the member of a class is public within its own package, but cannot be accessed outside of its package. 
+
+************************Immutable class
+
+How to create Immutable class in Java?
+	Immutable class means that once an object is created, we cannot change its content. In Java, all the wrapper classes (like String, Boolean, Byte, Short) 
+	and String class is immutable. We can create our own immutable class as well.
+
+Following are the requirements:
+	• Class must be declared as final (So that child classes can’t be created)
+	• Data members in the class must be declared as final (So that we can’t change the value of it after object creation)
+	• A parameterized constructor
+	• Getter method for all the variables in it
+	• No setters(To not have option to change the value of the instance variable)
+
+		public final class Student 
+		{ 
+			final String name; 
+			final int regNo; 
+		  
+			public Student(String name, int regNo) 
+			{ 
+				this.name = name; 
+				this.regNo = regNo; 
+			} 
+			public String getName() 
+			{ 
+				return name; 
+			} 
+			public int getRegNo() 
+			{ 
+				return regNo; 
+			} 
+		} 
+
+Singleton Class: Singleton pattern is a design pattern which restricts a class to instantiate its multiple objects.
+	a class must ensure that only single instance should be created and single object can be used by all other classes. 
+	There are two forms of singleton design pattern.
+	Early Instantiation: creation of instance at load time.
+	Lazy Instantiation: creation of instance when required.
+	Saves memory because object is not created at each request. Only single instance is reused again and again.
+	Singleton pattern is mostly used in multi-threaded and database applications. It is used in logging, caching, thread pools, configuration settings etc.
+	To design a singleton class: Make constructor as private and Write a static method that has return type object of this singleton class.
+	
+	There could be situations where we need not create multiple objects and hence Singleton can help in saving resources by avoiding creating new objects
+	every time a request is made. Moreover these classes can also be helpful if we want a object to be shared among threads.
+	
+class MySingleton 
+{ 
+    static MySingleton instance = null; 
+    public int x = 10; 
+    
+    // private constructor can't be accessed outside the class 
+    private MySingleton() {  } 
+   
+    // Factory method to provide the users with instances 
+    static public MySingleton getInstance() 
+    { 
+        if (instance == null)         
+             instance = new MySingleton(); 
+   
+        return instance; 
+    }  
+} 
+
+Serialization: Serialization is a mechanism of converting the state of an object into a byte stream. 
+	Deserialization is the reverse process where the byte stream is used to recreate the actual Java object in memory. 
+	This mechanism is used to persist the object.
+
+	Serializable in java is a marker interface and has no fields or methods to implement, only serves to identify the semantics of being serializable.
+	If you want a class object to be serializable, all you need to do it implement the java.io.Serializable interface.
+	Deserialization is the reverse process where the byte stream is used to recreate the actual Java object in memory.
+	 This mechanism is used to persist the object. It is mainly used to travel object's state on the network (which is known as marshaling).
+	Points to remember
+	1. If a parent class has implemented Serializable interface then child class doesn’t need to implement it but vice-versa is not true.
+	2. Only non-static data members are saved via Serialization process.
+	3. Static data members and transient data members are not saved via Serialization process. If there is any static data member in a class, it will not be serialized because static is the part of class not object.
+	  So, if you don’t want to save value of a non-static data member then make it transient.
+	 4.The String class and all the wrapper classes implement the java.io.Serializable interface by default. 
+
+Transient Keyword
+	The transient modifier/keyword is applicable only for variables but not for methods and classes.
+	At the time of serialization, if we don't want to serialize the value of a particular variable to meet security constraints,
+	then we should declare that variable as transient.
+
+	While performing serialization, the JVM ignores the original value of the transient variable and save default value to the file. 
+	Hence, transient means not to serialize.
+	
+	private transient int nonSerializeValueSalary;
+
+Transient Vs. Static
+	A static variable is not part of an object state, and hence, it won't participate in serialization. Due to this declaring static variable as transient,
+	there is no use.
+
+Final Vs. Transient
+	Final variables will be participated in serialization directly by the value. Hence, declaring a final variable as transient causes no impact.
+
+serialVersionUID: ANY-ACCESS-MODIFIER static final long serialVersionUID = 42L;
+	The Serialization runtime associates a version number with each Serializable class called a SerialVersionUID, Which is used during deserialization to verify 
+	that the sender and receiver of a serialized object have loaded classes for that(serialized) object that are compatible with respect to serialization.
+	If the receiver has loaded a class for the object that has a different serialVersionUID than that of the corresponding sender's class,
+	then deserialization will result in an InvalidClassException.
+	If no serialVersionUID is declared, JVM will use its own algorithm to generate a default SerialVersionUID based on various aspects of your Serializable class.
+
+For example, say it is January 1 and we have the Employee class as follows:
+
+public class Employee {
+    private String id;
+    private String name;
+    private int age;
+}
+With those, you serialized the data to your file system as empdata.dat on the same day.
+
+Now, on January 2, someone changes the class as follows:
+
+public class Employee {
+    private String id;
+    private String name;
+    private Date dateOfBirth;
+}
+If you are trying to restore (deserialization) empdata.dat to the Employee class, you can see it is not correct. Those are two different formats. 
+Note: Technically, this will deserialize without error, skipping the missing field. But your business logic output may not as expected.
+
+Here is where we need serialVersionUID.
+
+*****************************************Data Type Conversation
+
+1.primitives data type: byte-1,sort-2,int-2,long-8,float-4,double-8,char
+	Widening or Automatic Type Conversion: byte->sort->int->long->float->double
+	Narrowing or Explicit Conversion: double->float->long->int->short->byte
+		
+		Ex: double d = 10.0;
+			int i=(int)d;
+			long l1 = (long)d;
+		Or: 
+			double d = 10.0;
+			Double d1 = new Double(d);
+			Double d1 = 120.120;
+			int i8=(int)d1;// can not cast from Double to int.
+			int i1=d1.intValue();
+			long l5=d1.longValue();
+			byte b=d1.byteValue();
+			short s=d1.shortValue();
+	
+2.Wrapper class type:Number class is the super class of all wrapper class.
+	Autoboxing: Converting a primitive value into an object of the corresponding wrapper class is called autoboxing. For example, converting int to Integer class. 
+	Unboxing: Converting an object of a wrapper type to its corresponding primitive value is called unboxing. For example conversion of Integer to int.
+	Note:we do not need to perform any typecasting explicitly.

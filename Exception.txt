@@ -1,0 +1,213 @@
+Exception: An exception is an unwanted or unexpected event, which occurs during the execution of a program.When an exception occurs program execution gets terminated.
+		   Exception handling ensures that the flow of the program doesn’t break when an exception occurs. 
+
+Error: An Error indicates serious problem that a reasonable application should not try to catch. All exception and errors types are sub classes of class Throwable
+
+Exception propagation:
+	An exception propagates from method to method, up the call stack, until it’s caught. So if a() calls b(), which calls c(), which calls d(), and if d() 
+	throws an exception, the exception will propagate from d to c to b to a, unless one of these methods catches the exception.
+	The search for exception handler begins with the method in which the error occurred and proceeds through the call stack in the reverse order in which 
+	the methods were called, as described above.
+	When an appropriate handler (catch block) is found, the runtime system passes the exception to the handler. If no exception handler is found then 
+	exception reaches to JVM’s default exception handler which prints the exception details to logs and terminate the application.
+
+How JVM handle an Exception?
+Default Exception Handling : 
+	Whenever inside a method, if an exception has occurred, the method creates an Object known as Exception Object and hands it off to the run-time system(JVM).
+	The exception object contains name and description of the exception, and current state of the program where exception has occurred. Creating the Exception 
+	Object and handling it to the run-time system is called throwing an Exception.There might be the list of the methods that had been called 
+	to get to the method where exception was occurred. This ordered list of the methods is called Call Stack.Now the following procedure will happen.
+
+	The run-time system searches the call stack to find the method that contains block of code that can handle the occurred exception. 
+	The block of the code is called Exception handler.
+	The run-time system starts searching from the method in which exception occurred, proceeds through call stack in the reverse order in which methods were called.
+	If it finds  appropriate handler then it passes the occurred exception to it. Appropriate handler means the type of the exception object thrown matches 
+	the type of the exception object it can handle.
+	If run-time system searches all the methods on call stack and couldn’t have found the appropriate handler then run-time system handover the Exception Object
+	to default exception handler , which is part of run-time system. This handler prints the exception information in the following format and terminates program abnormally.
+
+
+
+Types of Exception:
+i> Checked Exception: are the exceptions that are checked at compile time. If some code within a method throws a checked exception, then the method must either handle 
+the exception or it must specify the exception using throws keyword.
+Ex- SQLException: When JDBC encounters an error during an interaction with a data source, it throws an instance of SQLException.
+
+ClassNotFoundException: occurs when we try to load a class at runtime using Class.forName() methods and requested classes are not found in classpath. 
+we forgot to add that jar file. 
+
+ii> Unchecked Exception: Unchecked are the exceptions that are checked at runtime rather than compiled time.
+Ex: NullPointerException – When you try to use a reference that points to null.
+	ArithmeticException – When bad data is provided by user, for example, when you try to divide a number by zero this exception occurs because dividing a
+	number by zero is undefined.
+	ArrayIndexOutOfBoundsException – When you try to access the elements of an array out of its bounds, for example array size is 5 (which means it has five 
+	elements) and you are trying to access the 10th element.
+	
+
+Throw keyword: The throw keyword in Java is used to explicitly throw an exception from a method or any block of code.Instance must be of type Throwable or a subclass of Throwable.
+	We can throw checked and unchecked exceptions: 
+	for checked exception: if we throw any checked exception then we must handle these  checked exception by declaring these checked exception(or Exception) 
+	in method signature with throws keyword,otherwise we will get compilation error.
+	for unchecked exception: if we throw any checked exception then Handling of unchecked exceptions is optional.
+
+Throws keyword: throws is a keyword in Java which is used in the signature of method to indicate that this method might throw one of the listed type exceptions. 
+	The caller to these methods has to handle the exception using a try-catch block.
+
+	Lets say we have a method myMethod() that has statements that can throw either ArithmeticException or NullPointerException, 
+	in this case you can use try-catch as shown below:
+	
+	But suppose you have several such methods that can cause exceptions, in that case it would be tedious to write these try-catch for each method. 
+	The code will become unnecessary long and will be less-readable.
+	
+						public void myMethod() throws ArithmeticException, NullPointerException
+						{
+						  // Statements that might throw an exception 
+						}
+
+						public static void main(String args[]) { 
+						  try {
+							myMethod();
+						  }
+						  catch (ArithmeticException e) {
+							// Exception handling statements
+						  }
+						  catch (NullPointerException e) {
+							// Exception handling statements
+						  }
+						}
+	One way to overcome this problem is by using throws like this: declare the exceptions in the method signature using throws and handle the exceptions 
+	where you are calling this method by using try-catch.
+	Another advantage of using this approach is that you will be forced to handle the exception when you call this method, all the exceptions that are
+	declared using throws, must be handled where you are calling this method else you will get compilation error.
+
+						import java.io.*;
+						class ThrowExample { 
+						  void myMethod(int num)throws IOException, ClassNotFoundException{ 
+							 if(num==1)
+								throw new IOException("IOException Occurred");
+							 else
+								throw new ClassNotFoundException("ClassNotFoundException");
+						  } 
+						} 
+
+						public class Example1{ 
+						  public static void main(String args[]){ 
+						   try{ 
+							 ThrowExample obj=new ThrowExample(); 
+							 obj.myMethod(1); 
+						   }catch(Exception ex){
+							 System.out.println(ex);
+							} 
+						  }
+						}
+
+
+We can throw checked and unchecked exceptions: 
+	for checked exception: if we throw any checked exception then we must handle these  checked exception by declaring these checked exception(or Exception) 
+	in method signature with throws keyword,otherwise we will get compilation error.
+	for unchecked exception: if we throw any checked exception then Handling of unchecked exceptions is optional.
+
+Throw Vs Throws:
+i>  Throw keyword is used in the method body to throw an exception, while throws is used in method signature to declare the exceptions
+ii> Throw keyword is used to throw an exception explicitly.Throws clause is used to declare an exception, which means it works similar to the try-catch block.
+iii> throw keyword is used to throw a single exception explicitly from any method or constructor while throws keyword is used in method and constructor declaration, 
+	 denoted which exception can possible be thrown by this method. 
+iv> throw is used within the method and constructor where as throws is used with the method and constructor signature.	 
+
+Try Block:
+The try block contains set of statements where an exception can occur. A try block is always followed by a catch block, which handles the exception that 
+occurs in associated try block. A try block must be followed by catch blocks or finally block or both.
+
+Catch Block: A catch block is where you handle the exceptions, this block must follow the try block.
+
+Try-catch block: If an exception occurs in try block then the control of execution is passed to the corresponding catch block. A single try block can have
+multiple catch blocks associated with it, you should place the catch blocks in such a way that the generic exception handler catch block is at the last.
+If we place generic exception handler at the before all the catch blocks then can handle all the exceptions.
+
+If both base and derived classes are caught as exceptions then catch block of derived class must appear before the base class.
+If we put base class first then the derived class catch block will never be reached
+
+Different ways to print Exception messages:
+i>java.lang.Throwable.printStackTrace()-- 
+ii> toString() -- e.toString()/System.out.println(e):- output: java.lang.ArithmeticException: / by zero
+iii>java.lang.Throwable.getMessage(): e.getMessage()- / by zero
+
+
+Arithmetic Exception
+	It is thrown when an exceptional condition has occurred in an arithmetic operation.
+
+ArrayIndexOutOfBoundException
+	It is thrown to indicate that an array has been accessed with an illegal index. The index is either negative or greater than or equal to the size of the array.
+
+ClassNotFoundException(Checked Exception)
+	This Exception is raised when we try to access a class whose definition is not found
+	Example of ClassNotFoundException is when we try to load JDBC drivers using Class.forName 
+	but forget to add it’s jar file in the classpath.
+
+
+FileNotFoundException(Checked Exception)
+	This Exception is raised when a file is not accessible or does not open. File file = new File("E://file.txt");
+
+IOException
+	It is thrown when an input-output operation failed or interrupted
+
+
+InterruptedException(Checked Exception)
+	It is thrown when a thread is waiting , sleeping , or doing some processing , and it is interrupted.
+
+NoSuchFieldException
+	It is thrown when a class does not contain the field (or variable) specified
+
+NoSuchMethodException
+	It is thrown when accessing a method which is not found.
+
+NumberFormatException(unchecked exception)
+	NumberFormatException is an unchecked exception thrown by parseXXX() methods when they are unable to format (convert) 
+	a string into a number. 
+	int num = Integer.parseInt ("akki") ; 
+
+StringIndexOutOfBoundsException(unchecked exception)
+	It is thrown by String class methods to indicate that an index is either negative than the size of the string
+
+
+Null Pointer Exception In Java:(Unchecked Exception)
+	NullPointerException is a RuntimeException. In Java, a special null value can be assigned to an object reference.
+	NullPointerException is thrown when program attempts to use an object reference that has the null value.
+	 
+	These can be:
+	Invoking a method from a null object.
+	Accessing or modifying a null object’s field.
+	Taking the length of null, as if it were an array.
+	Accessing or modifying the slots of null object, as if it were an array.
+	Throwing null, as if it were a Throwable value.
+	When you try to synchronize over a null object.
+
+	When we declare a reference variable, we must verify that object is not null, before we request a method or a field from the objects.
+
+
+ClassCastException:(RuntimeException)
+	Thrown to indicate that the code has attempted to cast an object to a subclass of which it is not an instance.
+	So, for example, when one tries to cast an Integer to a String, String is not an subclass of Integer, so a ClassCastException will be thrown.
+
+	Object i = Integer.valueOf(42);
+	String s = (String)i; 
+	
+	the conversion is valid only in cases where a class extends a parent class and the child class is casted to its parent class.
+	
+	Example: https://coderanch.com/t/416816/java/Casting-super-class-class
+	class Parent {}
+	class Child extends Parent {}
+	public class Main 
+	{
+		public static void main(String[] args)
+		{
+			Parent p1= new Parent();
+			Child c1 = new Child();
+			c1 = (Child) p1;---> ClassCastException because Parent cannot be cast to Child.
+			p1 = (Parent) c1;	---->ok because Child can be cast to Parent.
+			Child c2 = new Parent(); ---> compilation error because Parent can't convert to Child;
+			Parent  p2 = new Child(); ----> ok
+			Child c3 = p2; ---> compilation error, we have to cast.
+			Child c3 = (Child)p2;---> ok.  now the c3 (child type reference ) and p2(Parent type reference ) are pointing to the same object
+		}
+	}

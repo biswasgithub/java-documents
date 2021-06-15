@@ -1,0 +1,135 @@
+int result = Integer.parseInt(number);
+Integer result = Integer.valueOf(number);
+parseInt(String) returns a primitive int, whereas valueOf(String) returns a new Integer() object.
+
+
+String is a sequence of characters. But in Java, a string is an object that represents a sequence of characters. 
+The java.lang.String class is used to create string object.
+Strings are constant; their values cannot be changed after they are created. String buffers support mutable strings.
+Because String objects are immutable they can be shared. The Java language provides special support for the string concatenation operator ( + ).
+String concatenation is implemented through the StringBuilder(or StringBuffer) class and its append method. String conversions are implemented
+through the method toString, defined by Object.
+
++ operator is overloaded for String and used to concatenate two Strings. Although internally it uses StringBuffer to perform this action.
+Java does string concatenation using StringBuilder by default for the simple cases..
+There are two ways to create a String object:
+
+By string literal : Java String literal is created by using double quotes.
+For Example: String s=“Welcome”;  
+By new keyword : Java String is created by using a keyword “new”.
+For example: String s=new String(“Welcome”);  
+It creates two objects (in String pool and in heap) and one reference variable where the variable ‘s’ will refer to the object in the heap.
+
+String str = "Good";
+str = str + " Morning";
+In the above code you create 3 String Objects.
+
+"Good" it goes into the String Pool.
+" Morning" it goes into the String Pool as well.
+"Good Morning" created by concatenating "Good" and " Morning". This guy goes on the Heap.
+
+
+Now, let us understand the concept of Java String pool.
+
+Once string object is created its data or state can't be changed but a new string object is created.
+
+Java String Pool: Java String pool refers to collection of Strings which are stored in heap memory.
+
+In this, whenever a new object is created, JVM checks first String pool whether the object is already present in the pool or not. 
+If it is present, then same reference is returned to the variable else new object will be created in the String pool and the respective reference
+will be returned.
+
+
+This is how String works:
+String str = "knowledge";
+This, as usual, creates a string containing "knowledge" and assigns it a reference str. Simple enough? Lets perform some more functions:
+
+// assigns a new reference to the 
+// same string "knowledge"
+String s = str;     
+Let’s see how the below statement works:
+
+  str = str.concat(" base");
+This appends a string " base" to str.
+
+When the above statement is executed, the VM takes the value of String str, i.e. "knowledge" and appends " base", giving us the value 
+"knowledge base". Now, since Strings are immutable, the VM can’t assign this value to str, so it creates a new String object, gives it
+ a value "knowledge base", and gives it a reference str.
+
+An important point to note here is that, while the String object is immutable, its reference variable is not. So that’s why, in the above example,
+ the reference was made to refer to a newly formed String object.
+
+At this point in the example above, we have two String objects: the first one we created with value "knowledge", pointed to by s, and
+ the second one "knowledge base", pointed to by str. But, technically, we have three String objects, the third one being the 
+ literal "base" in the concat statement.
+
+Important Facts about String and Memory usage
+What if we didn’t have another reference s to "knowledge"? We would have lost that String. However, it still would have existed, 
+but would be considered lost due to having no references.
+
+class GFG { 
+    public static void main(String[] args) 
+    { 
+        String s1 = "java"; 
+        s1.concat(" rules"); 
+  
+        // Yes, s1 still refers to "java" 
+        System.out.println("s1 refers to " + s1); 
+    } 
+} 
+Output:
+s1 refers to java
+What’s happening:
+
+The first line is pretty straightforward: create a new String "java" and refer s1 to it.
+Next, the VM creates another new String "java rules", but nothing refers to it. So, the second String is instantly lost. We can’t reach it.
+
+
+Another Example:
+class Testimmutablestring{  
+ public static void main(String args[]){  
+   String s="Sachin";  
+   s.concat(" Tendulkar");//concat() method appends the string at the end  
+   System.out.println(s);//will print Sachin because strings are immutable objects  
+ }  
+}  
+
+Output:Sachin
+Now it can be understood by the diagram given below. Here Sachin is not changed but a new object is created with sachintendulkar.
+That is why string is known as immutable.
+As you can see in the above figure that two objects are created but s reference variable still refers to "Sachin" not to "Sachin Tendulkar".
+
+But if we explicitely assign it to the reference variable, it will refer to "Sachin Tendulkar" object.For example:
+class Testimmutablestring1{  
+ public static void main(String args[]){  
+   String s="Sachin";  
+   s=s.concat(" Tendulkar");  
+   System.out.println(s);  
+ }  
+}  
+Output:Sachin Tendulkar
+In such case, s points to the "Sachin Tendulkar". Please notice that still sachin object is not modified.
+
+
+Why String is immutable:
+1.String pool is possible only because String is immutable in Java. This way Java Runtime saves a lot of heap space because different 
+String variables can refer to the same String variable in the pool.If string is not immutable, changing the string with one reference 
+will lead to the wrong value for the other references.
+
+Because java uses the concept of string literal. Suppose there are 5 reference variables,all referes to one object "sachin".
+If one reference variable changes the value of the object, it will be affected to all the reference variables. That is why string objects are immutable in java.
+
+
+2.The hashcode of string is frequently used in Java. Since String is immutable, its hashcode is cached at the time of creation and
+it doesn’t need to be calculated again.This makes it a great candidate for the key in a Map and its processing is faster than other
+HashMap key objects. This is why String is the most widely used as HashMap keys.
+
+3.If String is not immutable then it would cause a severe security threat to the application. For example, database username, password 
+are passed as String to get database connection and in socket programming host and port details passed as String. Since String is immutable,
+ its value can’t be changed otherwise any hacker could change the referenced value to cause security issues in the application.
+
+ 
+ String vs StringBuffer vs StringBuilder
+	String is immutable whereas StringBuffer and StringBuider are mutable classes.
+	StringBuffer is thread safe and synchronized whereas StringBuilder is not, thats why StringBuilder is more faster than StringBuffer.
+	String concat + operator internally uses StringBuffer or StringBuilder class.

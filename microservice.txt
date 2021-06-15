@@ -1,0 +1,372 @@
+Ref: https://www.baeldung.com/spring-cloud-netflix-eureka
+	https://www.baeldung.com/spring-cloud-series
+	https://www.javainuse.com/spring/spring-cloud-netflix-zuul-tutorial
+
+A microservice is a small, loosely coupled distributed service. 
+	Small Modules – Application is broken into smaller modules which are easy for developers to code and maintain.
+	
+	Easier Process Adaption –By using microservices, new Technology & Process Adaption becomes easier. You can try new technologies with the newer 
+							 microservices that we use.
+	Unaffected –Large applications remain largely unaffected by the failure of a single module.
+
+Service registration and discovery’ where one dedicated server is responsible to maintain the registry of all the Microservice that has been deployed and removed.
+Client-side service discovery allows services to find and communicate with each other without hard-coding hostname and port.
+	When a client microservice registers with Eureka it provides metadata such as host, port, and health indicator thus allowing for other microservices to 
+	discover it. The discovery server expects a regular heartbeat message from each microservice instance. If an instance begins to consistently fail to send
+	a heartbeat, the discovery server will remove the instance from his registry. This way we will have a very stable ecosystem of Microservices collaborating
+	among each other, and on top of it we don’t have to manually maintain address of other Microservice, which is a next to impossible task if the scale up/down
+	is very frequent, on demand and we use virtual host to host the services specially in the cloud environment.
+	
+	
+	eureka configure:
+	1. dependency in pom .xml:
+			
+			<properties>
+				<java.version>1.8</java.version>
+				<spring-cloud.version>Finchley.SR2</spring-cloud.version>
+			</properties>
+
+			<dependency>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+			</dependency>
+			
+			OR
+			
+			<dependency>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-eureka-server</artifactId>   //package name
+			</dependency>
+
+
+			<dependencyManagement>
+				<dependencies>
+					<dependency>
+						<groupId>org.springframework.cloud</groupId>
+						<artifactId>spring-cloud-dependencies</artifactId>
+						<version>${spring-cloud.version}</version>
+						<type>pom</type>
+						<scope>import</scope>
+					</dependency>
+				</dependencies>
+			</dependencyManagement>
+	2. Define the Spring Boot class with annotations @SpringBootApplication and @EnableEurekaServer.
+	3. Inside src/main/resources create application.properties /application.yml file and add below properties:
+		application.properties:
+				
+		server.port=8761   							#Indicate the default PORT where this service will be started
+		eureka.client.register-with-eureka=false    #telling the server not to register himself in the service registry. because this application should be acting as a server.
+		eureka.client.fetch-registry=false 
+	
+
+	Note:  ‘TransportException: Cannot execute request on any known server'
+	registerWithEureka: If we make this property as true then while the server starts the inbuilt client will try to register itself with the Eureka server.
+	fetchRegistry: The inbuilt client will try to fetch the Eureka registry if we configure this property as true.
+	
+	Now when we start up the Eureka server, we don't want to register the inbuilt client to configure itself with the server.
+	If we mark the above properties as true (or don't configure them as they're true by default) while starting the server, the inbuilt client tries to
+	register itself with the Eureka server and also tries to fetch registry which is not yet available. As a result, we get TransportException.
+
+	
+Eureka Client:
+	1. In pom.xml include some Spring Discovery Client (for example spring-cloud-starter-netflix-eureka-client) into our classpath.
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+	
+	2. Then we need to annotate a @SpringBootApplication with either @EnableDiscoveryClient or @EnableEurekaClient – note that this annotation is optional 
+	   if we have the spring-cloud-starter-netflix-eureka-client dependency on the classpath.
+	   we'll also include the spring-boot-starter-web package in the pom.xml and implement a REST controller.
+	   
+	3. Then we have to set-up an application.yml with a configured Spring application name to uniquely identify our client in the list of registered applications.
+	
+	Then we have to tell our client, where it has to locate the registry: 
+		application.properties:
+		
+			spring.application.name=employee-producer
+			server.port=8092
+			eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+		OR
+		
+		Inside application.yml:
+		
+			spring:
+			  application:
+				name: spring-cloud-eureka-client
+			server:
+			  port: 8092
+			eureka:
+			  client:
+				serviceUrl:
+				  defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+			  instance: 
+				preferIpAddress: true
+RestTemplate:
+			step 1: add bean--
+						@Bean
+						@LoadBalanced
+						public RestTemplate restTemplate() {
+							return new RestTemplate();
+						}
+			step 2: 
+					i. for post call
+						Book book1=new Book();
+						Book book=restTemplate.postForObject("http://BOOK-SERVICE/book/add/"+ number, book1, Book.class);
+					ii. for get call
+						Book book=restTemplate.getForObject("http://BOOK-SERVICE/book/allbooks/"+ id, Book.class);
+			
+			
+Feign-client congigure:
+	1. The Feign Client is located in the spring-cloud-starter-feign package. 
+	To enable it, we have to annotate a @Configuration with @EnableFeignClients. To use it, we simply annotate an interface with @FeignClient(“service-name”) 
+	and auto-wire it into a controller.
+	
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId> 
+		</dependency>	
+					
+
+For feign:
+		Step 1: 
+			add dependency in pom.xml-
+						<dependency>
+							<groupId>org.springframework.cloud</groupId>
+							<artifactId>spring-cloud-starter-openfeign</artifactId>
+						</dependency>
+		
+		Step 2: Add @EnableFeignClients
+		Step 3: Implement feign service.
+				
+				@FeignClient(name="book-service")
+				@RequestMapping("book")
+				public interface BookFeignService {
+
+					@GetMapping("/books")
+					public List<String> getBooks();
+				}
+			
+		Step 3: feign.hystrix.enabled: true	
+
+
+API Gateway:
+	Step 1: 
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-gateway</artifactId>
+			</dependency>
+
+	Step 2: add @EnableEurekaClient in main class.
+	
+	Step 3: In properties file-
+			
+			spring:
+			  application:
+				name: API-GATEWAY
+			  cloud:
+				gateway:
+				  routes:
+				  - id: book-service    // service name
+					uri: lb://book-service
+					predicates:
+					  - Path=/book/**   // redirect path which have prefix "book"
+				  - id: movie-service
+					uri: lb://movie-service
+					predicates:
+					  - Path=/movie/** 
+			server:
+			  port: 9191
+			eureka:
+			  client:
+				serviceUrl:
+				  defaultZone: http://localhost:8761/eureka/
+		
+		*** Now every request redirect through 9191 port.
+
+
+Hystrix Fallback Method: Implementation done in Api-Gateway service.
+	
+	Step 1: 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>	
+
+	Step 2: add @EnableHystrix in main class
+	Step 3: create fallbackcontroller class and implement fallback method for every service.
+	Step 4: In Properties file add--
+			
+			cloud:
+				gateway:
+				  routes:
+				  - id: movie-service
+					uri: lb://movie-service
+					predicates:
+					  - Path=/movie/** 
+					filters:
+						- name: CircuitBreaker
+						  args:
+							name: movie-service
+							fallbackuri: forward:/movieServiceFallBack
+
+
+
+With lombok for entity class:
+		@Getter
+		@Setter
+		@NoArgsConstructor
+		@AllArgsConstructor
+		@ToString
+
+Ribbon(Client-side load balan):
+	Why ribbon: 
+		In Java EE architecture, we deploy our war/ear files into multiple application servers, then we create a pool of server and put a load balancer 
+		(Netscaler) in front of it, which has a public IP. The client makes a request using that public IP, and Netscaler decides in which internal application 
+		server it forwards the request by round robin or sticky session algorithm. We call it server side load balancing.
+	
+	Problem: The problem of server side load balancing is if one or more servers stop responding, we have to manually remove those servers from the load balancer
+			 by updating the IP table of the load balancer.
+			 
+	But microservices don't use server side load balancing. They use client side load balancing.
+	
+	In microservice, we create a service discovery like Eureka, where each service instance registers when bootstrapped. Eureka server maintains a service 
+	registry; it maintains all the instances of the service as a key/value map, where the {service id} of your microservice serves as the key and instances 
+	serve as the value. Now, if one microservice wants to communicate with another microservice, it generally looks up the service registry using DiscoveryClient
+	and Eureka server returns all the instances of the calling microservice to the caller service. Then it was a caller service headache which instance it calls.
+	Here, client side load balancing stepped in. Client side load balancing maintains an algorithm like round robin or zone specific, by which it can invoke 
+	instances of calling services. The advantage is s service registry always updates itself; if one instance goes down, it removes it from its registry, 
+	so when the client side load balancer talks to the Eureka server, it always updates itself, so there is no manual intervention- unlike server side 
+	load balancing- to remove an instance.
+	
+
+
+	Step 1: we have to add the following dependency in pom.xml:
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+		</dependency>
+	
+	Step 2: we have to Enable Ribbon. For that, we need to put @RibbonClient(name="EmployeeSearch") on top of the feign interface. By doing this,
+			we instruct Spring Boot to communicate with Eureka server and get the list of instances for service id EmployeeSearch. Please note that 
+			this is the {service-id} for the EmployeeSearch application.
+			
+		
+Hystrix: Due to some reason the employee-producer exposed service throws an exception. In this case we use Hystrix we defined a fallback method. 
+		In case of exception in the exposed service the fallback method returned some default value.
+		This is where hystrix comes into picture-
+		We will be using two features of Hystrix-
+			Fallback method
+			Circuit Breaker	
+		 
+
+	Step1: add dependency in pom.xml. 
+				<dependency>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-hystrix</artifactId>
+				</dependency>
+	
+	Step 2: add @EnableCircuitBreaker annotation with @SpringBootApplication. 
+			For the Circuit Breaker to work, Hystix will scan @Component or @Service annotated classes for @HystixCommand annotated methods,
+	
+	Step 3: add @HystrixCommand with the method in component class.
+	
+			@RequestMapping(value = "/employee", method = RequestMethod.GET)
+			@HystrixCommand(fallbackMethod = "getDataFallBack")
+			public Employee firstPage() {
+				//code
+			}
+			
+			public Employee getDataFallBack() {
+			
+			//code
+			}
+			
+	
+Zull API Gatway:
+https://dzone.com/articles/microservices-communication-zuul-api-gateway-1
+https://dzone.com/articles/how-to-build-an-api-gateway-with-netflix-zuul-spri
+https://howtodoinjava.com/spring-cloud/spring-cloud-api-gateway-zuul/
+		
+	In microservice architecture, in a complex business domain, more than 50-100 microservices is very common. If clients want to know the infoemation, 
+	So the client has to know the details of all REST API and URL patterns/ports to call them. 
+	and if there is common aspect(authentication, security, monitoring) onvolved for every microservices, so We have to implement these common aspect
+	seperately so that we can avoid code duplications. To make it robust, we need only one entry point where all common aspects code is written and 
+	the client communicates with that common service. Here, we can use Zuul.
+	So, Zuul acts as an API gateway  which receives all the requests coming from the UI and then delegates the requests to internal microservices.
+	So, we have to create a new microservice which is Zuul-enabled, and this service sits on top of all other microservices. 
+		
+	Step 1:
+	
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+		</dependency>
+	
+	OR
+	<dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-zuul</artifactId>
+    </dependency>	
+	
+	Step 2: @EnableZuulProxy
+	Step 3: zuul.routes.employeeUI.serviceId=EmployeeDashBoard
+			zuul.host.socket-timeout-millis=30000             
+		
+		
+		
+
+Pay attention to the last two properties:
+ zuul.routes.employeeUI.serviceId=EmployeeDashBoard 
+
+By this, we are saying if any request comes to the API gateway in form of /employeeUI, it will redirect to the EmployeeDashBoard microservice. So, 
+if you hit the following URL: http://localhost:8084/employeeUI/dashboard/1, it will redirect to http://localhost:8081/dashboard/1.
+
+With  zuul.host.socket-timeout-millis=30000 -- , we instruct Spring Boot to wait for the response for 30000 ms until Zuul's internal Hystrix timeout will kick off and show you the error.
+
+
+
+		
+	What is a reverse proxy?
+	A reverse proxy is a server that sits in front of web servers and forwards client (e.g. web browser) requests to those web servers. 
+	Reverse proxies are typically implemented to help increase security, performance, and reliability. In order to better understand how a
+	 reverse proxy works and the benefits it can provide, let’s first define what a proxy server is.
+
+	What’s a proxy server?
+	A forward proxy, often called a proxy, proxy server, or web proxy, is a server that sits in front of a group of client machines. When those 
+	computers make requests to sites and services on the Internet, the proxy server intercepts those requests and then communicates with web servers
+	on behalf of those clients, like a middleman.
+
+	For example, let’s name 3 computers involved in a typical forward proxy communication:
+
+	A: This is a user’s home computer
+	B: This is a forward proxy server
+	C: This is a website’s origin server (where the website data is stored)
+	
+	
+1. eureka server:
+	dependency: actuator, eureka server.
+	
+client API: Customer-API
+	dependency: actuator, web, eureka client, spring-boot-starter-data-rest
+
+
+
+RestTemplete with Restful: https://o7planning.org/en/11647/spring-boot-restful-client-with-resttemplate-example#a13907929
+
+	1. GET - getForObject: Use the  getForObject method to send a request to the  Restful Service, and receive data returned. Below is the simplest example.
+	The data returned is a string.      
+	
+	static final String URL_EMPLOYEES = "http://localhost:8080/employees";
+ 
+    static final String URL_EMPLOYEES_XML = "http://localhost:8080/employees.xml";
+    static final String URL_EMPLOYEES_JSON = "http://localhost:8080/employees.json";
+	
+	RestTemplate restTemplate = new RestTemplate();
+        // Send request with GET method and default Headers.
+    String result = restTemplate.getForObject(URL_EMPLOYEES, String.class); // result store employee object;
+

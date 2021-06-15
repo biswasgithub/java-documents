@@ -1,0 +1,209 @@
+From->On->Outer->Where->Group By->Having->Select->Distinct->Order By
+
+DDL(Data Definition Language) :consists of the SQL commands that can be used to define the database schema. DDL commands are:
+
+	CREATE – is used to create the database or its objects (like table, index, function, views, store procedure and triggers).
+	DROP – is used to delete objects from the database. DROP command completely removes a table from the database. 
+			This command will also destroy the table structure and the data stored in it. It can also be used on Databases, to delete the complete database.
+	ALTER-is used to alter the structure of the database. Can rename our table name ad columns name.
+	TRUNCATE–TRUNCATE command removes all the records from a table. But this command will not destroy the table's structure. 
+			 When we use TRUNCATE command on a table its (auto-increment) primary key is also initialized.
+	COMMENT –is used to add comments to the data dictionary.
+	RENAME –is used to rename an object existing in the database.
+
+DQL (Data Query Language) : DML statements are used for performing queries on the data within schema objects. Example of DQL:
+	SELECT – is used to retrieve data from the a database.
+
+DML(Data Manipulation Language) : The SQL commands that deals with the manipulation of data present in the database belong to DML or Data Manipulation Language and this includes most of the SQL statements.
+	Examples of DML:
+	INSERT – is used to insert data into a table.
+	UPDATE – is used to update existing data within a table.
+	DELETE – is used to delete records from a database table.
+	
+	
+(INNER) JOIN: Returns records that have matching values in both tables
+	SELECT column_name(s) FROM table1 INNER JOIN table2 ON table1.column_name = table2.column_name;
+	
+LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
+
+A self JOIN is a regular join, but the table is joined with itself.
+
+
+DCL(Data Control Language) : DCL includes commands such as GRANT and REVOKE which mainly deals with the rights, permissions and other controls of the database system.
+	Examples of DCL commands:
+	GRANT-gives user’s access privileges to database.
+	REVOKE-withdraw user’s access privileges given by using the GRANT command.
+
+TCL(transaction Control Language) : TCL commands deals with the transaction within the database.
+	Examples of TCL commands:
+	COMMIT– commits a Transaction.
+	ROLLBACK– rollbacks a transaction in case of any error occurs.
+	SAVEPOINT–sets a savepoint within a transaction.
+	SET TRANSACTION–specify characteristics for the transaction.
+
+SQL Constraints: Constraints are used to make sure that the integrity of data is maintained in the database.
+
+	NOT NULL
+	UNIQUE      : UNIQUE constraint ensures that a field or column will only have unique values.
+	PRIMARY KEY :Primary key constraint uniquely identifies each record in a database. A Primary Key must contain unique value and it must not contain null value.
+	FOREIGN KEY :FOREIGN KEY is used to relate two tables. FOREIGN KEY constraint is also used to restrict actions that would destroy links between tables.
+	CHECK       : CHECK constraint is used to restrict the value of a column between a range. It performs check on the values, before storing them into the database.
+	DEFAULT
+	
+	Ex:
+	
+	CREATE table Order_Detail(
+    order_id int PRIMARY KEY CHECK(order_id > 0),, 
+    order_name varchar(60) NOT NULL,
+    c_id int FOREIGN KEY REFERENCES Customer_Detail(c_id)
+	);
+
+Note: In this query, c_id in table Order_Detail is made as foriegn key, which is a reference of c_id column in Customer_Detail table
+
+Create database and table:
+		CREATE SCHEMA Mydatabase;
+		use Mydatabase;
+
+		create table one
+		(
+		 id int not null,
+		 name char(25),
+		 city varchar2(25)
+		)
+
+Describe Table_name: describe the structure of the table.
+	ex: Output:
+		Name      Null       Type
+		ID       Not Null    INT
+		NAME                CHAR(25)
+		CITY                VARCHAR2(25)
+		
+		
+Truncate, Drop or Rename: 
+	ex: TRUNCATE TABLE table_name;
+		
+		DROP TABLE table_name;
+		DROP DATABASE Test;
+		
+		RENAME TABLE old_table_name to new_table_name;
+		
+alter command is used for altering the table structure, such as,
+	to add a column to existing table. Ex: ALTER TABLE table_name ADD(column_name datatype);
+	to rename any existing column.	   Ex: ALTER TABLE table_name RENAME old_column_name TO new_column_name;
+	to change datatype of any column or to modify its size. Ex: ALTER TABLE table_name modify(column_name datatype);
+	to drop a column from the table. Ex: ALTER TABLE table_name DROP(column_name);
+	
+LIKE: 	WHERE CustomerName LIKE 'a%'	Finds any values that start with "a"
+		WHERE CustomerName LIKE '%a'	Finds any values that end with "a"
+		WHERE CustomerName LIKE '%or%'	Finds any values that have "or" in any position
+		WHERE CustomerName LIKE '_r%'	Finds any values that have "r" in the second position
+		WHERE CustomerName LIKE 'a_%_%'	Finds any values that start with "a" and are at least 3 characters in length
+		WHERE ContactName LIKE 'a%o'	Finds any values that start with "a" and ends with "o"
+
+COUNT(): COUNT(*), all records ( rows ) are COUNTed with NULL.
+		 COUNT(column_name) does not COUNT a record if its field is NULL. (https://www.w3resource.com/sql/aggregate-functions/count-function.php)
+
+SUM(Salary): Nulls are ignored.	
+AVG(salary): include of all columns value with null value.
+MAX(Salary):
+MIN(Salary):
+FIRST(): returns the return first value of the selected column.
+LAST(column_name): returns the return last value of the selected column.	 
+		 
+IN: 	 SELECT *  FROM students  WHERE students_name IN ( Amit , Raghav, Rajeev);
+
+BETWEEN: SELECT * FROM Products WHERE Price BETWEEN/NOT BETWEEN 10 AND 20; (10<= price <=20)
+
+AND:	SELECT account_no, name  FROM customers  WHERE customer_name ='IBM'  AND employees =1000;  
+
+UPDATE: UPDATE suppliers  SET supplier_name = 'HP'  WHERE supplier_name = 'IBM'  AND offices = 8;  
+
+OR:		SELECT *   FROM suppliers  WHERE city = 'New York'  OR available_products >= 250;  		
+
+ORDER BY:	SELECT supplier_city  FROM suppliers  WHERE supplier_name = 'IBM'  ORDER BY supplier_city(ASC-by default)/DESC;  
+
+DELETE: DELETE FROM EMPLOYEE WHERE ID=101;  
+DELETE(All rows): DELETE FROM STUDENT_NAME;  
+DELETE(Table): DROP TABLE table_name; 
+
+
+
+		
+GROUP BY: Important Points:
+	GROUP BY clause is used with the SELECT statement.
+	In the query, GROUP BY clause is placed after the WHERE clause.
+	In the query, GROUP BY clause is placed before ORDER BY clause if used any.
+	The GROUP BY used with aggregate functions (COUNT, MAX, MIN, SUM, AVG) to group the result-set by one or more columns.		
+	Ex: Group By multiple columns/ Group By single columns:	
+	
+		SELECT COUNT(CustomerID), Country FROM Customers GROUP BY Country ORDER BY COUNT(CustomerID) DESC;
+		
+HAVING: HAVING clause is used to place conditions on groups. we can not use the aggregate functions like SUM(), COUNT() etc. with WHERE clause. 
+		So we have to use HAVING clause if we want to use any of these functions in the conditions.
+		The HAVING clause was added to SQL because the WHERE keyword could not be used with aggregate functions.
+			
+		SELECT COUNT(CustomerID), Country FROM Customers GROUP BY Country HAVING COUNT(CustomerID) > 5;	
+		
+		where -> group by-> having-> order by
+		
+ALL and ANY:	The ANY operator returns true if any of the subquery values meet the condition.
+
+				The ALL operator returns true if all of the subquery values meet the condition.		
+
+SELF JOIN: A self JOIN is a regular join, but the table is joined with itself. (http://www.sqlservertutorial.net/sql-server-basics/sql-server-self-join/)
+
+	SELECT a.customer_id, a.first_name, a.last_name, b.customer_id,b.first_name, b.last_name 
+	FROM customer a 
+	INNER JOIN customer b
+    ON a.last_name = b.first_name;
+	In the above example, we retrieve all customers whose last name matches the first name of another customer.
+	
+				
+INNER JOIN: The INNER JOIN keyword selects records that have matching values in both tables.
+				SELECT o.OrderID, c.CustomerName FROM Orders o INNER JOIN Customers c ON o.CustomerID = c.CustomerID;				
+
+LEFT OUTER JOIN: The LEFT JOIN keyword returns all records from the left table (table1), and the matched records from the right table (table2).
+				 The result is NULL from the right side, if there is no match.
+				
+	SELECT Customers.CustomerName, Orders.OrderID FROM Customers LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID ORDER BY Customers.CustomerName;				
+RIGHT OUTER JOIN: The RIGHT JOIN keyword returns all records from the right table (table2), and the matched records from the left table (table1).
+				  The result is NULL from the left side, when there is no match.				
+				  
+FULL JOIN/FULL OUTER JOIN: The FULL OUTER JOIN keyword return all records when there is a match in either left (table1) or right (table2) table records.	
+
+
+
+CREATE TABLE `user` (
+'first_name' VARCHAR(14) NOT NULL,
+'last_Name' VARCHAR(14) NOT NULL,
+'email' VARCHAR(20) NOT NULL,
+'cardNumber' VARCHAR(12) NOT NULL,
+'cvv' VARCHAR(3) NOT NULL,
+'expiryMonth' VARCHAR(2) NOT NULL,
+'expiryYear' VARCHAR(4) NOT NULL,
+'pin' VARCHAR(20) NOT NULL,
+PRIMARY KEY (`email`))
+
+
+
+CREATE TABLE `dev2qa_example`.`user_account` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`))			  
+				
+				
+
+ORACLE:
+
+SELECT * FROM all_tables where owner='HR';  //show all tables
+
+CREATE TABLE UserAuthentication(
+    id NUMBER not null,
+    name VARCHAR(15) not null,
+    password VARCHAR(20) not null,
+    PRIMARY KEY (id)
+);

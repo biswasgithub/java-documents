@@ -1,0 +1,61 @@
+Generics:
+	ref: http://www.programmr.com/blogs/using-bounds-java-generics 
+		 https://howtodoinjava.com/java/generics/java-generics-what-is-pecs-producer-extends-consumer-super/
+		 https://stackoverflow.com/questions/4343202/difference-between-super-t-and-extends-t-in-java
+		 https://howtodoinjava.com/java/generics/complete-java-generics-tutorial/
+
+'? extends T': 
+		 
+	Ex 1: void addAll(Collection<T> t); 
+	What this means is, if  T refers to  Number, a client invoking this method can only give a collection of numbers. 
+	They will not be able to give it a Collection of Integer  objects (giving (Collection<Integer> ) will result in a compilation error).
+	
+	List<Number> list5=new ArrayList<>();
+	List<Integer> list6=new ArrayList<>();
+		addAll(list6); // compilation error
+		
+	static void addAll(Collection<Number> t) {
+		
+	}
+
+	addAll(list6); // no compilation error
+	void addAll(Collection<? extends T> t){
+	}
+	
+	public void  addAll(Collection<?  extends T> t) {
+		t.add(new  Double(  "3.33")); //The method add(capture#1-of ? extends T) in the type Collection<capture#1-of ? extends T> is not applicable for the arguments (Double)
+
+	}
+	
+	'? extends T' to indicate a type that (?)is a sub-type of ' T', Ex: Integer extends Number (Integer is a sub-type of Number) 
+		'?' and the 'extends ' keyword which essentially tells the compiler; allow any type which is a subtype of Number.
+
+? super T:
+			 
+	' ? super T‘ to indicate a type which (?)is a super-type of 'T'. Ex: Number super Integer (Number is the super class of Integer)
+
+		extends keyword allows us to specify sub-types, the super keyword allows us to specify super-types. <? super Integer>  refers to Integer or any 
+		of its super-types (like Number, or even Object)
+	
+
+	Ex: public static  boolean addAll(Collection<?  super Integer> c, Integer... elements)
+
+	Since 'elements' is of type  Integer, ‘ c’ needs to be a collection of any type which can accept Integer objects. In plain English, we would say, 
+	‘c ’ should be a collection of Integer or any super-type of Integer. Just as the extends keyword allows us to specify sub-types, 
+	the super keyword allows us to specify super-types. <? super Integer>  refers to Integer or any of its super-types
+
+	Remember PECS: "Producer Extends, Consumer Super".
+
+	"Producer Extends" - If you need a List to produce T values (you want to read Ts from the list), you need to declare it with ? extends T,
+	e.g. List<? extends Integer>. But you cannot add to this list.
+
+	"Consumer Super" - If you need a List to consume T values (you want to write Ts into the list), you need to declare it with ? super T, 
+	e.g. List<? super Integer>. But there are no guarantees what type of object you may read from this list.
+	
+	If you need to both read from and write to a list, you need to declare it exactly with no wildcards, e.g. List<Integer>.
+
+	1. Use the <? extends T> wildcard if you need to retrieve object of type T from a collection.
+	2. Use the <? super T> wildcard if you need to put objects of type T in a collection.
+	3. If you need to satisfy both things, well, don’t use any wildcard. As simple as it is.
+	4. In short, remember the term PECS. Producer extends Consumer super.	
+	

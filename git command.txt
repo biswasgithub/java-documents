@@ -1,0 +1,72 @@
+Push existion project to Git*** 
+Clone: git clone https://github.com/URL-TO-REPO-HERE
+1. Change to the root of the local repository:
+	$ cd <repo_name>
+
+2. initialized the repository:
+	$ git init
+
+3. Check status:
+	$ git status 
+
+4. List all your branches:
+	$ git branch -a
+
+5. Checkout the branch you want to use.
+	$ git checkout <feature_branch>
+	
+6. Create a new branch:
+	$ git checkout -b new-branch existing-branch 
+	(This creates a new branch new-branch, based on existing-branch. The -b flag tells it to create a new branch at the same time	
+
+7. create new branch and Switch to new branch:	
+	$ git checkout -b amend-my-name (created a new branch and Switched to a new branch 'amend-my-name')
+
+8. Confirm you are now working on that branch:
+	$ git branch
+
+9. Delete branch:
+	$ git branch -d <branch>
+	
+10. Stage your changes:
+	$ git add . / git add -A  (adds the entire project to the staging area)
+	$ git add <fileName>  (Git moves all changes of <file> in the staging area to wait for the next commit.)
+	& git add <DirectoryName>  (adds the entire <directory> to the staging area) 
+
+11. Commit your changes:
+	$ git commit -m "Commit message" 
+
+12. Push your changes to GitHub:
+	$ git push <remote> <branch>
+	$ git push origin amend-my-name
+	$ git push -f origin master
+
+13. set origin: add existion project to gitHub:(sequnce of step:1->2->3->4->->5->6->7 )
+	$ git remote add origin <url of the branch>
+	$ git remote add origin https://github.com/biswasgithub/employee-consumer.git
+
+14. git pull:
+	When you are executing pull command it will execute two commands in background.
+				first fetch and then merge
+	Fetch command will download all files from remote repo to local repo.
+	
+	C push his changes(line 15,16) in branch feature/MER-12. You are working on same branch and made your chandes(Line 20,21). While committing your code 
+	1st you have to fetch the updated version of feature/MER-12 branch and then you have to commit. So "git pull" will be used. git pull 1st fetch the 
+	updated version(Line 15,16) and then merge your changes with updated version (Line 15,16,20,21). Then commit.
+	If you don't fetch the updated version and try to commit the you will get error.
+	
+	In git bash write: git pull  then open GitGUI and commit.
+
+15. commit exiting project to git:
+	git init -> git add . -> git commit -m "initial commit" -> git remote add origin remoteRepositoryURL -> git remote -v -> git push -f origin master
+
+******Note:
+Problem:
+$ git push -f origin master
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+Solution: set remoti origin by usnig- $ git remote add origin https://github.com/biswasgithub/employee-consumer.git

@@ -1,0 +1,798 @@
+
+2.Features of Spring Framework
+	Lightweight: Spring is lightweight when it comes to size and transparency. 
+	
+	Inversion of control (IOC): The Spring IoC creates the objects, wire them together, configure them, and manage their complete lifecycle.
+	
+	Aspect oriented Programming (AOP): Aspect oriented programming in Spring supports cohesive development by separating application business logic 
+									   from system services.
+	
+	Container: Spring Framework creates and manages the life cycle and configuration of the application objects.
+	
+	MVC Framework: Spring Framework’s MVC web application framework is highly configurable. Other frameworks can also be used easily instead of Spring MVC Framework.
+	
+	Transaction Management: Generic abstraction layer for transaction management is provided by the Spring Framework. 
+							Spring’s transaction support can be also used in container less environments.
+	
+	JDBC Exception Handling: The JDBC abstraction layer of the Spring offers an exception hierarchy, which simplifies the error handling strategy.
+
+
+*************************************** Dependency Injection (DI)**********************************
+
+	Dependency Injection (DI) is a design pattern that removes the dependency from the programming code so that it can be easy to manage 
+	and test the application. Dependency Injection makes our programming code loosely coupled.
+	 
+	In Dependency Injection, you do not have to create your objects but have to describe how they should be created. You don’t
+	connect your components and services together in the code directly, but describe which services are needed by which components
+	in the configuration file. The IoC container will wire them up together.
+
+	Constructor-based dependency injection −  is accomplished when the container invokes a class constructor with a number of arguments, each representing a 
+											 dependency on other class.
+
+	Setter-based dependency injection − is accomplished by the container calling setter methods on your beans after invoking a no-argument constructor 
+										method to instantiate your bean.
+
+********************** Core Problems Spring***************************************
+
+What Is Spring? What Are the Core Problems Spring Solves?
+	The Spring Framework is one of the most popular application development frameworks for Java. One of the best features in Spring is that 
+	it has the Dependency Injection (DI) or Inversion Of Control (IOC), which allows us to remove the hard-coded dependencies and make our application loosely 
+	coupled, extendable and maintainable.
+	And, loosely coupled applications can be easily unit-tested.
+	
+
+	Example Without Dependency Injection:
+		Consider the example — MyController depends on MyService to perform a certain task. So, to get the instance of MyService, we will use:
+
+		MyService service = new MyService();
+
+		Now, we have created the instance for MyService directly , and we see both are tightly coupled. If I create a mock for MyService in a unit test for 
+		MyController. There is no way we can mock MyService objects.
+		how do I make MyController use the mock? It's bit difficult — isn't it?
+
+
+Example With a Dependency Injection:
+	Dependency injection implementation solved the problem with hard-coded dependency and helped us in making our application flexible and easy to extend.
+	With the help of only two annotations, we can get the instance of MyService easily, which is not tightly coupled. The Spring Framework does all the 
+	hard work to make things simpler.
+
+	@Component annotation is added to the class, so that when Spring framework will scan for the components, this class will be treated as component. 
+		@Component annotation can be applied only to the class.
+		
+	@Autowired is simply used to in the Spring Framework to find the correct match for this specific type and autowire it.
+	
+	So, Spring framework will create a bean for MyService and autowire it into MyController.
+	In a unit test, I can ask the Spring Framework to auto-wire the mock of MyService into MyController.
+
+*******************Spring boot internal work
+	https://gainjavaknowledge.medium.com/how-spring-boot-application-works-internally-dd9bd3ecc487
+	https://www.journaldev.com/7989/key-components-and-internals-of-spring-boot-framework
+
+	Spring Boot Framework has mainly four major Components.
+			Spring Boot Starters
+			Spring Boot AutoConfigurator
+			Spring Boot CLI
+			Spring Boot Actuator
+
+	Spring Boot Starters:
+		The main responsibility of Spring Boot Starter is to combine a group of common or related dependencies into single dependencies.
+		For instance, we would like to develop a Spring WebApplication with Tomcat WebServer. Then we need to add the Spring core Jar file,
+		Spring Web Jar file, Spring Web MVC Jar file, Servlet Jar file jar dependencies in our Maven’s pom.xml file.
+		
+		If we want to add some database stuff then we need to add database related jars like Spring JDBC jar file, Spring ORM jar files,Spring Transaction Jar file etc.
+
+		We need to define lot of dependencies in our build files.
+		Spring Boot Starter component combines all related jars into single jar file so that we can add only jar file dependency to our build files.
+		When we add “spring-boot-starter-web” jar file dependency to our build file, then Spring Boot Framework will automatically download all required
+		jars and add to our project classpath.
+	
+	Spring Boot AutoConfigurator:
+		
+		If we want to declare a Spring MVC application using Spring IO Platform, then we need to define lot of XML Configuration like views, 
+		view resolvers etc. But if we use Spring Boot Framework, then we dont need to define those XML Configuration. Spring Boot AutoConfigurator
+		will take of this.
+		
+		If we use “spring-boot-starter-web” jar file in our project build file, then Spring Boot AutoConfigurator will resolve views, view resolvers etc. 
+		automatically.
+		It will enable bean based on some condition.
+		
+		@ConditionalOnBean(DataSource.class) :
+			It will serach for the DataSource bean if it is available then only it will enable JpaRepositoriesAutoConfiguration . 
+			So this we need to define DataSource related properties into our property file.
+		
+		@ConditionalOnClass(JpaRepository.class) :
+			It will serach for the JpaRepository class if it is available then only it will enable JpaRepositoriesAutoConfiguration .
+		
+	@SpringBootApplication:
+	Spring Boot reduces defining of Annotation configuration. If we use @SpringBootApplication annotation at class level, then Spring Boot AutoConfigurator
+		will automatically add all required annotations to Java Class ByteCode.
+		
+		@SpringBootApplication = @Configuration + @ComponentScan + @EnableAutoConfiration.
+	
+	Spring Actuator:
+		Two features:
+		Providing Management EndPoints to Spring Boot Applications.
+		Spring Boot Applications Metrics.
+	
+		Spring boot’s module Actuator allows you to monitor and manage application usages in production environment, without coding and configuration for any
+		of them. These monitoring and management information is exposed via REST like endpoint URLs.
+		We actually use HTTP Request methods like GET and POST to represent Management EndPoints using Spring Boot Actuator.
+	
+	Step 1: add-
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-actuator</artifactId>
+			</dependency>
+
+	Important Actuator Endpoints: 
+		/env			Returns list of properties in current environment
+		/health			endpoint is used to check the health or state of the running application.
+		/auditevents	Returns all auto-configuration candidates and the reason why they ‘were’ or ‘were not’ applied.
+		/beans			Returns a complete list of all the Spring beans in your application.
+		/trace			Returns trace logs (by default the last 100 HTTP requests).
+		/dump			It performs a thread dump.
+		/metrics		It shows several useful metrics information like JVM memory used, system CPU usage, open files, and much more.
+		
+		
+		
+Inside run() method:
+
+	From the run method, the main application context is kicked off which in turn searches for the classes annotated with @Configuration, initializes 
+	all the declared beans in those configuration classes, and based upon the scope of those beans, stores those beans in JVM, specifically in a space
+	inside JVM which is known as IOC container. After the creation of all the beans, automatically configures the dispatcher servlet and registers the 	
+	default handler mappings, messageConverts, and all other basic things.
+	Basically, spring boot supports three embedded servers:- Tomcat (default), Jetty and Undertow.
+	
+	SpringApplication.run() internal flow:
+	
+	Inside run(String… args) method there is method createApplicationContext() is called. It will create application context and inside 
+	createApplicationContext() method it will check application type it is SERVLET type Or REACTIVE or DEFAULT context type based on this
+	it will return context.
+		
+	If SERVLET type Or REACTIVE context class not found then it will go for default context type. For Default context type there is a 
+	class AnnotationConfigApplicationContext.class.
+	
+			public AnnotationConfigApplicationContext(Class… annotatedClasses) {
+				this();
+				register(annotatedClasses);
+				refresh();
+				}
+	Constructor of this class is used to Register the annotated class beans with the context.
+	The classes which are annotated with @Component, @Service, @Configuration etc. will be register to the context.
+	And in the finally run(-) method auto deploy the jar/war to server.
+	
+	@Configuration :
+			It will behave act as bean.
+	@EnableAutoConfiguartion :
+			it will enable bean based on some condition.
+	@ComponentScan :
+			It is mainly used to scan the classes and packages to create the bean.
+			
+	It is the main class that we need to define to make our spring boot application.
+			
+			@SpringBootApplication
+			public class Application {
+				public static void main(String[] args) {
+				SpringApplication.run(Application.class, args);
+				}
+			}
+			
+			If we will open @SprinBootApplication Annotation here you will see it contains :
+			@SpringBootConfiguration
+			@EnableAutoConfiguration
+			@ComponentScan(excludeFilters = {
+			@Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+			@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
+			public @interface SpringBootApplication {
+			// code here…..
+			}
+	
+
+Why Spring Boot: Spring Boot helps to develop and build the web applications with very little configurations.
+	https://dzone.com/articles/spring-vs-spring-boot
+	https://dzone.com/articles/understanding-the-basics-of-spring-vs-spring-boot
+
+	Creating a Spring project is more painful. You have to take care of configuring beans, data source, transaction manager, Servlet classes, application servers, Maven configurations and etc.
+	When we use Hibernate, we have to configure datasource, EntityManager, etc.
+	
+	 1. Spring Boot does all of those using AutoConfiguration and will take care of all the internal dependencies that our application needs. 
+		Spring Boot will auto-configure with the Dispatcher Servlet, if Spring jar  is in the class path. 
+		Spring Boot will auto-configue to the datasource, if Hibernate jar  is in the class path.
+	 
+		Spring Boot gives us a pre-configured set of Starter Projects. We add them as a dependency in our project.
+	 
+	2. @SpringBootApplication adds 3 important annotations for application configuration purpose: @SpringBootApplication does three things, 
+		it allows you to run the Main class as a JAR with an embedded container. It enables Java configuration, and it also enables Component Scanning.
+
+		1.@Configuration : @Configuration classes are typically bootstrapped using either AnnotationConfigApplicationContext.
+		Use @Configuration annotation on top of any class to declare that this class provides one or more @Bean methods and may be processed by the Spring 
+		container to generate bean definitions and service requests for those beans at runtime.
+	
+		
+		@Configuration
+		@ComponentScan("com.acme.app.services")
+		 public class AppConfig {
+			 // various @Bean definitions ...
+		 }
+		 
+		 The packages mentioned above are the locations where the beans and their dependencies are defined. This @ComponentScan gives a clue to the Spring 
+		 framework on where to search.
+		
+		2.@EnableAutoConfiguration : The Spring Boto auto-configuration feature tries to automatically configure our Spring application based upon the JAR
+									 dependency we have added in the classpath. 
+									 By default, this auto-configuration feature is not enabled, and we have to add
+									 @EnableAutoConfiguration or @SpringBootApplicaiton annotations.
+
+
+									 If you find that specific auto-configuration classes that you do not want are being applied, you can use the exclude 
+									 attribute of @EnableAutoConfiguration to disable.
+									 
+									 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+									 
+		3.@ComponentScan : Spring needs to know which packages contain spring beans, otherwise you would have to register each bean individually. 
+							That's what @ComponentScan is used for.
+							Spring is a dependency injection framework. It is all about beans and wiring in dependencies.
+							We have to defining Spring Beans is by adding the right annotation — @Component or @Service or @Repository.
+							However, Spring does not know about the bean. So it's need to search for it. We have to define the packages that have to be scanned.
+							Once we define a Component Scan for a package, Spring would search the package and all its sub packages for components/beans.
+							Spring is able to auto scan, detect and register your beans or components from pre-defined project package.							
+							If no package is specified current class package is taken as the root package.
+		
+							@ComponentScan(“com.in28minutes.springboot”)
+							@SpringBootApplication
+							public class SpringbootIn10StepsApplication {
+								//code
+							}
+							
+								@ComponentScan({"com.in28minutes.springboot.basics.springbootin10steps","com.in28minutes.springboot.somethingelse"})
+								@SpringBootApplication
+								public class SpringbootIn10StepsApplication {
+								//code
+							}
+	
+	3. Before spring boot if we need spring-webmvc, jackson-databind, log4j then we have to add them separately as a dependency in our pom.xml.
+		But In Spring boot once we add <spring-boot-starter-web> dependency, the Spring Boot Starter Web added all of these in our classpath.
+
+
+Scopes:
+	Using Spring Bean Scopes we can control the creation bean instances . Sometimes we want to create bean instance as singleton
+	but in some other cases we might want it to be created on every request or once in a session.
+
+	singleton – only one instance of the spring bean will be created for the spring container. This is the default spring bean scope. 
+				While using this scope, make sure bean doesn’t have shared instance variables otherwise it might lead to data inconsistency issues.
+	prototype – A new instance will be created every time the bean is requested from the spring container.
+	request – This is same as prototype scope, however it’s meant to be used for web applications. A new instance of the bean will be created for each 
+			  HTTP request.
+	session – A new bean will be created for each HTTP session by the container.
+	global-session – This is used to create global session beans for Portlet applications.
+
+	Example:
+
+	@Configuration
+	public class MyConfiguration {
+		
+		@Bean
+		@Scope(value="singleton")
+		public MyBean myBean() {
+			return new MyBean();
+		}
+		
+	}
+	
+	Note: singleton is default scope, so we can remove @Scope(value="singleton") from above bean definition.
+	Notice that both MyBean instances have same hashcode and the constructor is called once once, it means that spring container is returning the
+	same instance of MyBean always.
+	
+	@Configuration
+	public class MyConfiguration {
+		
+		@Bean
+		@Scope(value="prototype")
+		public MyBean myBean() {
+			return new MyBean();
+		}
+		
+	}
+	NOte: MyBean instance is created every time it’s requested from spring container. 
+	
+	Note: If we add request, we will get exception. It’s because request, session and global-session scopes are not available for standalone applications.
+	it's applicable for Spring Boot web application.
+	
+	@Bean
+	@Scope(value="request")
+	public MyBean myBean() {
+		return new MyBean();
+	}
+
+
+@Autowired:
+	ref: https://www.baeldung.com/spring-qualifier-annotation
+		 https://dzone.com/articles/autowiring-in-spring
+		 https://stackoverflow.com/questions/3153546/how-does-autowiring-work-in-spring
+	
+	Autowiring feature of spring framework enables you to inject the object dependency implicitly.
+	Spring supports the following autowiring modes:
+
+	no: It’s the default autowiring mode. It means no autowiring.
+	byName: The byName mode injects the object dependency according to name of the bean. In such a case, the property and bean name should be the same.
+			It internally calls the setter method.
+	byType: The byType mode injects the object dependency according to type. So it can have a different property and bean name. 
+			It internally calls the setter method.
+	constructor: The constructor mode injects the dependency by calling the constructor of the class. It calls the constructor having a large number 
+				of parameters.
+	autodetect: In this mode, Spring first tries to autowire by the constructor. If this fails, it tries to autowire by using byType.
+	
+	@Autowired on Properties:
+		 when the annotation is directly used on properties, Spring looks for and injects Department when Employee is created.
+		 This is how it eliminates the need for getters and setters.
+		 
+		 @Component
+			public class Department {
+			}
+			
+		public class Employee {
+			private int eid;
+			private String ename;
+			@Autowired
+			private Department department;
+		}
+
+	@Autowired on Setters
+		when the annotation is used on the setter method, the setter method is called with the instance of Department when Employee is created.
+		
+		@Component
+		public class Employee {
+			private int eid;
+			private String ename;
+			private Department department;
+			
+			@Autowired
+			public void setDepartment(Department department) {
+				this.department = department;
+			}
+		}
+		
+	@Autowired on Constructors:
+		 the annotation is used on a constructor, an instance of Department is injected as an argument to the constructor when Employee is created.
+		
+		@Component
+		public class Employee {
+			private int eid;
+			private String ename;
+			private Department department;
+			@Autowired
+			public EmployeeBean(DepartmentBean deptBean) {
+				System.out.println("*** Autowiring by using @Autowire annotation on constructor ***");
+				this.deptBean = deptBean;
+			}
+		}
+
+
+Autowire Conflict Resolution
+	By default, Spring resolves @Autowired entries byType. If more than one bean of the same type is available in the container, 
+	the framework will throw NoUniqueBeanDefinitionException exception, indicating that more than one bean is available for autowiring. 
+
+	@Primary:
+		In Spring framework, the @Primary annotation is used to give higher preference to a bean, when there are multiple beans of same type. 
+		The @Primary annotation may be used on any class directly or indirectly annotated with @Component or on methods annotated with @Bean .	
+		This annotation is useful when we want to specify which bean of a certain type should be
+		injected by default.
+		
+		@Configuration
+		public class AppConfig {
+		   @Bean
+		   @Primary
+		   public User getAdminUser() {
+			  return new AdminUser();
+		   }
+
+		   @Bean
+		   public User getGuestUser() {
+			  return new GuestUser();
+		   }
+		}
+		
+	@Qualifier:
+	
+	The @Qualifier annotation can be used on any class annotated with @Component. you can give Spring hints about the name of the bean you want to use.
+	The Spring IoC container unable to determine which bean should be injected and throws an exception NoUniqueBeanDefinitionException.
+	Use the @Qualifier annotation with class annotated with @Component and field annotated with @Autowired.
+	Both attributes name of the @Qualifier must be same.
+	
+			@Component
+			@Qualifier("carBean")
+			public class Car implements Vehicle {
+
+			   //...
+			   //...
+			}
+
+
+			@Component
+			@Qualifier("bikeBean")
+			public class Bike implements Vehicle{
+
+			   //...
+			   //...
+			}
+	
+	
+			@Component
+			public class VehicleService {
+
+			   @Autowired
+			   @Qualifier("carBean")
+			   private Vehicle vehicle;
+
+			   //...
+			   //...
+			}
+	
+	
+	Note: if both the @Qualifier and @Primary annotations are present, then the @Qualifier annotation will have precedence.
+	
+1.Controller:
+	This means that class annotated with @Controller will also be automatically be detected by Spring container as part of container's component scanning process.
+	We can create a controller class by using @Controller annotation.
+
+@Controller and @RestController:
+	The class annotated with @Controller will also be automatically be detected by Spring container as part of container's component scanning process.
+	
+	A Controller is a class that is responsible for preparing a model Map with data to be displayed by the view. send this model object to the dispatcher-servlet.
+	
+	Combination of @Controller and @ResponseBody to create a RESTful response.
+
+	@RestController simply returns the object and object data is directly written into HTTP response as JSON or XML.
+
+
+@Bean:
+	Indicates that a method produces a bean to be managed by the Spring container. This is one of the most
+	used and important spring annotation.
+	
+************************************************** @RequestBody and @ResponseBody******************************************************
+@RequestBody:
+	the @RequestBody annotation binds the HTTPRequest body to the method parameters. Spring framework automatically deserializes incoming HTTPRequest to the 
+	Java object using Http Message Converters.
+
+	API need customer data for the registration.
+	Customer full registration form, system will send customer data through HTTPRequest body.
+	Spring framework will automatically deserialize the JSON into a Java type based on the HTTPMessageConvertor.
+	
+	 @ResponseBody tell Spring framework to serialize a return object into JSON or XML and send this information back as part of the HTTPResponse.
+
+
+
+	Ex: @RequestMapping(value="/response", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		@ResponseBody
+		public ResponseTransfer postResponseController(@RequestBody LoginForm loginForm){
+	}
+
+@ResponseBody:
+	Controller send the data as a java objects.But HTTP response can't contain Java objects. So we need to convert the java objects to appropriate format
+	typically JSON/XML format.
+	When we use @ResponseBody,then Spring will convert the Java objects into appropriate format [JSON/XML/Other] using available converters, based on 
+	content type.
+	for Example, if the request says it accepts JSON, and then spring convert java objects to JSON, then JSON will be returned.
+	
+	<dependency>
+		<groupId>com.fasterxml.jackson.dataformat</groupId>
+		<artifactId>jackson-dataformat-xml</artifactId>
+	</dependency>
+	
+	<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+	</dependency>
+
+
+
+
+2.@RequestMapping: 
+	When configuring Spring MVC, you need to specify the mappings between the requests and handler methods.
+	To configure the mapping of web requests, you use the @RequestMapping annotation.
+	This annotation can be applied at both levels:
+	The @RequestMapping annotation can be applied to class-level and/or method-level in a controller.
+
+@ModelAttribute:
+	The @ModelAttribute is an annotation that binds a method parameter or method return value to a named model attribute and then exposes it to a web view.
+	When used as a method argument, it indicates the argument should be retrieved from the model. 
+	
+	@RequestMapping(value = "/addEmployee", method = RequestMethod.POST)
+		public String submit(@ModelAttribute("employee") Employee employee) {
+		// Code that uses the employee object
+ 
+		return "employeeView";
+	}
+
+3. @PathVariable / @PathParam:
+		@PathVariable extracts values from URI and bind this parameter with method argument.
+		 URL: http://localhost:8080/SapringMvcExample/update/2
+			@RequestMapping(value="/update/{id}")
+			public ModelAndView upadate(@PathVariable("id") int id){}
+
+
+4.@RequestParam / @QueryParam: Used to extract the value from query parameters of the request URI and bind the value with method parameter arguments.
+	 Query parameters are a defined set of parameters attached to the end of a url.
+	 URL: http://localhost:8080/SapringMvcExample/update?from=100&to=200&orderBy=age&orderBy=name
+		@RequestMapping(value="/update{id}")
+		public ModelAndView upadate(@RequestParam("age") int age){}
+
+ 
+There are 4 types of auto components scan annotation types:
+1. @Component annotation is used to denote a class as Component. It means that Spring framework will autodetect these classes for dependency injection
+when annotation-based configuration and classpath scanning is used. @Component indicates that a class might be a candidate for creating a bean. Its like putting a hand up.
+
+2.@Controller indicates a controller component in the presentation layer.
+A Controller class is responsible to handle a different kind of client requests based on the request mappings. It create data send it dispatcher-servlet as 
+ModelAndView object.We can create a controller class by using @Controller annotation.
+
+The repository is where the data is stored. The service is what manipulates the data.
+
+3.@Repository – class provides suitable need for DAO layer. It also make sure that unchecked exception thrown by DAO layer eligible to translate a 
+				Spring’s DataAccessException . @Repository annotate classes at persistence layer, which will act as database repository.
+
+4.@Service -We mark beans with @Service to indicate that it's holding the business logic. 
+
+In a real-world situation comparison, if your money is stored in a vault in a bank, the vault is the repository. The teller that deposits, withdraws, 
+etc is the service.
+
+
+groupId will identify your project uniquely across all projects.Ex- org.apache.maven
+
+artifactId is the name of the jar without version that gets deployed to a Maven repository.
+
+Each artifact has a group ID (usually a reversed domain name, like com.example.foo), an artifact ID (just a name),
+and a version string. The three together uniquely identify the artifact. A project's dependencies are specified as artifacts.
+
+
+@Value: Read value from properties file. [in properties file, my.value=hello]
+		@value("${my.value}")
+		String name;
+		
+		@value("Hello")
+		
+		@value("${my.value:hello}")
+		
+		@value("${my.value.list}")  // my.value.list=one, two, three
+		List<String> name;
+		
+@configurationProperties:
+	Read the value from properties file and inject this value to our code one by one.
+	
+	application.properties:
+		db.url=
+		db.host=127.0.0.1
+		db.port=1232
+
+	@configuration   // it will create DbConnection bean
+	@configurationProperties("db")  // read value and inject them to the menber variables which have prefix "db"
+	public class DbConnection{
+	
+		private String url;
+		private String host;
+		private int port;
+		
+		@Autowired
+		DbConnection dbConnection; // read all values in one shot
+	}	
+
+
+profile:
+	spring.profiles.active: test // it tells spring that i have test profile insted of default. Use test profile
+
+**********************************DataBase Connection*****************************
+There are two basic ways of creating a connection to a database in Java: a) with a driver manager, b) using a data source.
+ The data source has several advantages over a driver manager:
+
+	1. it supports distributed transactions -> A distributed transaction is a transaction that accesses two or more DBMS servers.
+	2. it provides a connection pooling technique
+	3. it can be managed by a server, i.e. outside an application
+The driver manager hampers the application performance as the connections are created and closed in Java classes. A driver manager can be used in simple
+ testing applications; for complex application a data source is always recommended. 
+
+
+
+Connection Pool:
+If we want to communicate with database multiple time then it is not recomendated to create a seperate object multiple times and destroy seperate object 
+multiple times. It creates performance issues. So we will maintain a pool of pre-defined connections object so that we can use this object whenever we 
+want to connect with DB. So same connections object can be used multiple times so that overall application performance will ne implroved.
+
+DriverManager Vs DataSource:
+	1. con = DM.getConnection(jdbcURL,uname,pass) : will create new connection object.
+	   con = DS.getConnection(jdbcURL,uname,pass) : new connection won't be created, it will contact connection pool and from the pool one connection object will
+	   be returned.
+
+
+using DataSource:
+
+JDBC:
+	JDBC is an API for the Java programming language that defines how a client may access a database. 
+	It provides methods for querying and updating data in a database.
+DataSource interface in Java:
+	JDBC API provides an interface DataSource that has to be implemented by vendor specific DataSource implementations. 
+	DataSource interface is part of javax.sql package and it has two overridden methods.
+
+			1. getConnection()
+			2. getConnection(String username, String password)
+			
+	A JDBC driver should include at least a basic DataSource implementation. For example MySQL DB JDBC driver includes
+	the implementation com.mysql.jdbc.jdbc2.optional.MysqlDataSource and Oracle DB’s implementation is oracle.jdbc.pool.OracleDataSource.
+
+	People prefer to use one of the connection pooling library Apache DBCP or mchange c3p0 atleast with stand alone Java programs,
+
+# mysql properties
+mysql.driver=com.mysql.jdbc.Driver  // oracle.jdbc.driver.OracleDriver
+mysql.url=jdbc:mysql://localhost:3306/testdb //jdbc:oracle:thin:@localhost:1521:orcl
+mysql.username=testuser
+mysql.password=test623
+
+
+
+import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.util.Properties;
+
+public class ComLineDSEx {
+
+    public static MysqlDataSource getMySQLDataSource() throws
+            FileNotFoundException, IOException {
+
+        Properties props = new Properties();
+        FileInputStream fis = null;
+        MysqlDataSource ds = null;
+
+        fis = new FileInputStream("src/resources/db.properties");  //The database properties are read from the db.properties file with the FileInputStream class.
+        props.load(fis);
+
+        ds = new MysqlConnectionPoolDataSource();  //A MysqlConnectionPoolDataSource is created and the datasource properties are set.
+        ds.setURL(props.getProperty("mysql.url"));
+        ds.setUser(props.getProperty("mysql.username"));
+        ds.setPassword(props.getProperty("mysql.password"));
+
+        return ds;
+    }
+
+    public static void main(String[] args) throws IOException, SQLException {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        MysqlDataSource ds = getMySQLDataSource();
+
+        try {
+
+            con = ds.getConnection(); //A connection object is created from the datasource with the getConnection() method.
+            pst = con.prepareStatement("SELECT VERSION()"); // An SQL statement is created.
+            rs = pst.executeQuery(); // The query is executed. It returns a result set.
+			
+            if (rs.next()) {			// precess the results
+
+                String version = rs.getString(1);
+                System.out.println(version);
+            }
+
+        } finally {
+
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (pst != null) {
+                pst.close();
+            }
+
+            if (con != null) {  // close the connection
+                con.close();
+            }
+        }
+    }
+}
+
+for spring boot default connection SQL Server:
+	spring.datasource.url=jdbc:mysql://localhost:3306/testdb
+	spring.datasource.username=dbuser
+	spring.datasource.password=dbpass
+	spring.datasource.driverClassName=com.mysql.jdbc.Driver
+	spring.jpa.hibernate.dialect=org.hibernate.dialect.SQLServer2012Dialect
+	
+we can use below properties to customize a DBCP2 connection pool.
+	spring.datasource.dbcp2.initial-size = 50
+	spring.datasource.dbcp2.max-idle = 50
+	spring.datasource.dbcp2.default-query-timeout = 10000
+	spring.datasource.dbcp2.default-auto-commit = true
+
+
+DataSource example Using mchange c3p0:
+	Another way of getting DataSource object is using c3p0 library. With stand alone Java program you can create an instance of ComboPooledDataSource.
+	
+	import java.beans.PropertyVetoException;
+	import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+	public class DataSource {
+	 private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+	 private static final String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/netjs";
+	 private static final String DB_USER = "root";
+	 private static final String DB_PWD = "admin";
+	 private static DataSource ds;
+	 private ComboPooledDataSource cpds = new ComboPooledDataSource();
+
+	 //private constructor
+	 private DataSource() throws PropertyVetoException{
+		 cpds.setDriverClass(DRIVER_CLASS); //loads the jdbc driver            
+		 cpds.setJdbcUrl(DB_CONNECTION_URL);
+		 cpds.setUser(DB_USER);                                  
+		 cpds.setPassword(DB_PWD);                                  
+		  
+		 // the settings below are optional 
+		 // c3p0 can work with defaults
+		 cpds.setMinPoolSize(5);                                     
+		 cpds.setAcquireIncrement(5);
+		 cpds.setMaxPoolSize(20);
+	 }
+	}
+DataSource example Using Apache DBCP:
+	With stand alone Java programs where data source is needed it is more convenient to use connection pooling library like DBCP.
+	
+	//BasicDataSource basicDS = new BasicDataSource();
+	  basicDS.setDriverClassName(DRIVER_CLASS);
+	  basicDS.setUrl(DB_CONNECTION_URL);
+	  basicDS.setUsername(DB_USER);
+	  basicDS.setPassword(DB_PWD);
+	  
+	  // Parameters for connection pooling
+	  basicDS.setInitialSize(10);
+	  basicDS.setMaxTotal(10); 
+
+DataBase connectivity using DriverManager:
+	
+	Step-1: import the package.
+	Step-2: Load and Register the class. 
+	Step-3: Establish the Connection.
+	Step-4: Create the Statement.
+	Step-5: Execute the Query.
+	Step-6: Process the result.
+	Step-7: Close the connection.
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public static void myDBConnection(){
+	String url="jdbc:mysql://localhost:3306/dataBaseName";  // 
+	String uname="root";
+	String pass="123";
+	
+	Class.forName(com.mysql.jdbc.Driver); // 2. Registering driver class
+		// Another way
+        //DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+	Connection con=DriverManager.getConnection(url, uname, pass);  // Creating connection
+	Statement st=con.createStatement();  // creating Statement
+	ResultSet rs= st.executeQuery(query);  // Executing Query: "Select * from Employee"
+	
+	// Processing Resultset
+	
+	while(rs.next()){
+		String str=re.getString("username");
+		System.out.println(name);
+	}
+	
+	finally{
+		st.close();
+		con.close();	
+	}
+}
+
+
+
+

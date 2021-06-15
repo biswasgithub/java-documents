@@ -1,0 +1,272 @@
+https://www.guru99.com/restful-web-services.html#1
+https://docs.oracle.com/cd/E19776-01/820-4867/ghrpv/index.html
+https://www.keycdn.com/support/put-vs-post
+https://javarevisited.blogspot.com/2018/02/top-20-spring-rest-interview-questions-answers-java.html
+https://www.techbeamers.com/rest-api-interview-questions-answers/
+
+How does HTTPS work?
+	HTTPS uses an encryption protocol to encrypt communications. The protocol is called Transport Layer Security (TLS), although formerly it was known
+	as Secure Sockets Layer (SSL). This protocol secures communications by using what’s known as an asymmetric public key infrastructure. 
+	This type of security system uses two different keys to encrypt communications between two parties:
+
+	The private key - this key is controlled by the owner of a website and it’s kept, as the reader may have speculated, private. 
+	                  This key lives on a web server and is used to decrypt information encrypted by the public key.
+	The public key - this key is available to everyone who wants to interact with the server in a way that’s secure. 
+	                 Information that’s encrypted by the public key can only be decrypted by the private key.
+					 
+HTTPS: hypertext transfer protocol secure. SSL(Secure sockets layer) creates secure encrypted connection between server and browser.
+
+SSL Handshake:
+	The communication over SSL always begins with the SSL handshake. The SSL handshake is an asymmetric cryptography which allows the browser
+	to verify the web server, get the public key and establish a secure connection before the beginning of the actual data transfer.
+	
+	1.The client sends a "client hello" message. This includes the client's SSL version number, cipher settings, session-specific data and 
+	  other information that the server needs to communicate with the client using SSL.
+	2.The server responds with a "server hello" message. This includes the server's SSL version number, cipher settings, session-specific data, 
+	  an SSL certificate with a public key and other information that the client needs to communicate with the server over SSL.
+	3.The client verifies the server's SSL certificate from CA (Certificate Authority) and authenticates the server. If the authentication fails,
+      then the client refuses the SSL connection and throws an exception. If the authentication succeeds, then proceed to step 4.
+	4.The client creates a session key, encrypts it with the server's public key and sends it to the server. If the server has requested 
+	  client authentication (mostly in server to server communication), then the client sends his own certificate to the server.
+	5.The server decrypts the session key with its private key and sends the acknowledgement to the client encrypted with the session key.
+	
+	Thus, at the end of the SSL handshake, both the client and the server have a valid session key which they will use to encrypt or decrypt actual data.
+	The public key and the private key will not be used any more after this.
+
+Actual Data Transfer
+	The client and the server now use a shared session key to encrypt and decrypt actual data and transfer it. This is done using the same 
+	session key at both ends and so, it is a symmetric cryptography. The actual SSL data transfer uses symmetric cryptography because it is easy
+	 and takes less CUP consumption compared with the asymmetric cryptography.
+
+Web service:
+	The Web Service is a client server application for communication between two devices (client and server) over the network. 
+API(Application Programming Interface): Java application programming interface (API) is a list of all classes that are part of the
+	Java development kit (JDK). It includes all Java packages, classes, and interfaces, along with their methods, fields, and constructors .
+	
+Restful Web Services: REST stands for Representational State Transfer. REST is an architectural style of developing web services.
+
+	These web services use HTTP methods to implement the concept of REST architecture.
+	 
+	Restful Web Services is a stateless client-server architecture. RESTful web services make use of HTTP protocol as a medium of communication between
+	client and server.
+	In RESTful web-services, The client sends a message in the form of an HTTP Request to the server. Server process these request and return the HTTP response
+	to the client.This technique is called Messaging. These messages contain message data and metadata(a set of data that describes and gives information about other data.)
+	, i.e., information about itself.
+	
+	REST architecture treats every content as a resource. REST uses different ways to represent a resource like text, JSON, and XML.
+
+Resource: 	
+	A resource is an object with a type, associated data, relationships to other resources, and a set of methods that operate on it.
+	In Rest, few standard methods are defined for the resource- GET, POST, PUT and DELETE methods.
+	Resources can be grouped into collections. Each collection is homogeneous so that it contains only one type of resource.
+
+
+Advantages:
+	Language Independent - The web services can be written in any programming language.
+	Platform Independent - The web services can be executed on any platform.
+	Allows different data format - The web service permits different data format such as Plain Text, HTML, XML, and JSON.
+
+Restful architecture: An application or architecture considered RESTful or REST-style has the following characteristics--
+
+1. Uniform Interface: Individual resources are identified using URLS. REST make explicit use of HTTP methods to perform different operations in resources. 
+						We can delete a resource using DELETE method of HTTP protocol. Similarly we can use GET, POST and PUT to access, add and modify resources. 
+						Second thing is the resources have some representations like XML, JSON, text or TEXT and we can modify the representation as per our requirement. 
+						Client can select the resource representation. 
+
+2.Statelessness: Stateless in REST means server do not store any client session information. Every HTTP request happens in complete isolation.
+				The server never depends/relies on information from previous requests.
+				When the client makes an HTTP request, so the request includes all the necessary information so that the server can fulfill our request. 
+				If that information was important, the client would have sent it again in this request. 
+				This makes server more scalable and reduce work load.
+
+
+3.Use of cache: Server can use the cache to save the frequent response to reduce load. Sometimes the client might ask the server for the same request again.
+				This request will go to the server, and the server will give a response. This increases the traffic across the network. 
+				So if the same request is given by the client, instead of going to the server, it would go to the cache and get the required information.
+				Caching is the process in which server response is stored so that a cached copy can be used when required and there is no need of generating 
+				the same response again.
+
+4.Client-Server: The client send's a request to the web service on the server. The server would either reject the request or comply and
+				 provide an adequate response to the client.
+
+5.Layered system:REST allows you to use a layered system architecture where you deploy the APIs on server A, and store data on server B 
+and authenticate requests in Server C, 
+
+
+200 (OK): The HTTP Status 200 (OK) status code indicates that the request has been processed successfully on server.
+
+201 (Created) : one or more new resources have been successfully created on server.
+
+202 (Accepted) : HTTP Status 202 indicates that request has been accepted for processing, but the processing has not been completed. 
+				 This status code is useful when the actual operation is asynchronous in nature.
+204 (No Content) : indicates that the server has successfully fulfilled the request and that there is no content to send in the response payload body. 
+				By default, 204 (No Content) response is cacheable. If caching needs to be overridden then response must include cache respective cache headers.
+400 (Bad Request): 	400 is the generic client-side error status, used when no other 4xx error code is appropriate. Errors can be like malformed request syntax, 
+					invalid request message parameters, or deceptive request routing etc.
+401 (Unauthorized): A 401 error response indicates that the client tried to operate on a protected resource without providing the proper authorization. 
+					It may have provided the wrong credentials or none at all. 
+403 (Forbidden) : A 403 error response indicates that the client’s request is formed correctly, but the REST API refuses to honor it, 
+				  i.e. the user does not have the necessary permissions for the resource. 
+404 (Not Found) : The 404 error status code indicates that the REST API can’t map the client’s URI to a resource but may be available in the future. 
+405 (Method Not Allowed): The API responds with a 405 error to indicate that the client tried to use an HTTP method that the resource does not allow. 
+406 (Not Acceptable): The 406 error response indicates that the API is not able to generate any of the client’s preferred media types, 
+					  as indicated by the Accept request header. For example, a client request for data formatted as application/xml will receive a 406 response
+					  if the API is only willing to format data as application/json.
+412 (Precondition Failed): If client specified one or more preconditions in its request headers, But in REST API if certain conditions were met.
+415 (Unsupported Media Type): If client request xml data formatted but the API is only willing to process data formatted as application/json.
+						
+500 (Internal Server Error): 500 is the generic REST API error response. Most web frameworks automatically respond with this response status code whenever 
+							they execute some request handler code that raises an exception.
+501 (Not Implemented): The server either does not recognize the request method, or it lacks the ability to fulfill the request.							
+
+
+
+method=RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE/APPLICATION_XML_VALUE
+
+Name The Most Commonly Used HTTP Methods Supported By REST?
+Get: the GET method is used to retreive data from a server at the specified resource.
+
+POST: Always use POST for CREATE operations. The POST method should be used to create a subordinate (or child) of the resource identified by the Request-URI.
+
+PUT:PUT method is used to create or overwrite a resource at a particular URL. always use PUT for UPDATE operations.
+
+DELETE:The DELETE method is exactly as it sounds: delete the resource at the specified URL.
+
+OPTIONS -This method lists down all the operations a web service supports. It makes read-only requests to the server.
+
+HEAD – It returns meta information about the request URL.
+	
+PUT Vs POST:
+	PUT puts a file or resource at a specific URI. If there's already a file or resource at that URI, PUT replaces that
+	file or resource. If there is no file or resource there, PUT creates one.
+	
+	PUT method is idempotent. If we send same request multiple times, the results will always be the same.
+	PUT method is idempotent. So if you send retry a request multiple times, that should be equivalent to single request modification.
+	
+	POST method is not idempotent If we send same request N times, N resources with N different URIs created on server.
+	means every times we will receive various results.
+	
+	When you know the URL of the thing you want to create or overwrite, a PUT method should be used. 
+    if you only know the URL of the category or sub-section of the resource you want to create something within, use the POST method
+
+URI -- uniform resource identifier identifies a resource (text document, image file, etc)
+
+
+State The Core Components Of An HTTP Request?
+	Each HTTP request includes five key elements.
+	1.Resources –resources is identified URIs(Uniform Resource Identifier).
+	2.Request Verbs - Indicates the HTTP methods such as GET, POST, DELETE, PUT, etc.
+	3.Request Headers -Request Header carries metadata (as key-value pairs) for the HTTP Request message. Metadata could be a client (or browser) type,
+	  the format that the client supports, message body format, and cache settings.
+	4.Request Body − Request Body indicates the message content or resource representation.
+	5.HTTP Version − Indicates which the HTTP version. For example, HTTP v1.1.
+
+State The Core Components Of An HTTP Response?
+	Every HTTP response includes four key elements.
+	1.Response Header − Contains metadata for the HTTP Response message in the form of key-value pairs. For example, content length, content type, response date, and server type.
+	2.Response Body − indicates Response message content or Resource representation. This is the main body of the response.
+	3.Response codes-Indicates the Server status for the requested resource. For example, 404 means resource not found and 200 means response is ok.
+	4. HTTP Version – Indicates HTTP version, for example-HTTP v1.1.
+
+	
+
+ 
+
+JAX-RS: The Java API for RESTful Web Services. JAX-RS uses annotations to simplify the development and deployment of web services. JAX-RS is part of JDK, 
+		we have to add its dependency jars in our application.
+ <groupId>javax.ws.rs</groupId>
+ <artifactId>javax.ws.rs-api</artifactId>
+
+JAX-RS annotations are: @PathParam and @QueryParam
+
+
+
+************************************************** @Produces and @Consumes******************************************************
+
+Returning JSON or XML:
+	You can specify which content type your Web Service endpoint can return by using the produces attribute with the request annotation.
+	
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE) // return only json format
+	@GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})// return JSON or XML format
+	public UserModel getUser(@PathVariable String id)
+	{
+	   // other code here to create UserModel object
+	 return userModel;
+	}
+	
+	and to make your Spring MVC be able to return a bit more complex XML structures add the following dependency to your pom.xml file:
+	<dependency>
+	<groupId>com.fasterxml.jackson.dataformat</groupId>
+	<artifactId>jackson-dataformat-xml</artifactId>
+	</dependency>
+	
+	<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+	</dependency>
+
+
+By default, a resource class can respond to and produce all MIME media types of representations specified in the HTTP request and response headers. 
+You can specify which MIME media types of representations a resource can respond to or produce by using @produces and @Consumes.
+
+@Produces, @Consumes: used to specify the request and response types.
+Syntex: @Produces({"application/xml", "application/json"})  // indicate both xml/json can produce
+
+@Produces--The @Produces annotation is used to specify the MIME media types of representations a resource that it can produce and send back to the client. 
+			If @Produces is applied at the class level, all the methods in a resource can produce the specified MIME types by default.
+			If applied at the method level, the annotation overrides any @Produces annotations applied at the class level.
+			If no methods in a resource are able to produce the MIME type in a client request, the JAX-RS runtime sends back an HTTP “406 Not Acceptable” error.
+			If the annotation is not present at any level, by default the "text/html" media type is returned.
+			
+@Consumes---The @Consumes annotation is used to specify which MIME media types of representations a resource that it can accept, or consume, from the client.
+			If @Consumes is applied at the class level, all the response methods accept the specified MIME types by default. 
+			If applied at the method level, @Consumes overrides any @Consumes annotations applied at the class level.
+			If a resource is unable to consume the MIME type of a client request, the JAX-RS runtime sends back an HTTP 415 (“Unsupported Media Type”) error
+			If the annotation is not present at any level, by default the "text/html" media type is returned.
+
+
+************************************************** @PostMapping and @RequestMapping ******************************************************
+			
+Difference between @PostMapping and @RequestMapping: 
+	
+	1.@PostMapping annotation is one specialized version of @RequestMapping annotation which handle HTTP POST requests.
+	2.@PostMapping acts as a shortcut for @RequestMapping(method = RequestMethod.POST).
+		@RequestMapping(value = "/employees", method = RequestMethod.POST)  //1
+ 
+		@PostMapping("/employees")  //2
+
+New Spring MVC Request Annotations: available since Spring 4.3.
+	1.@PostMapping:
+		@RequestMapping(value = "/members", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		
+		@PostMapping(path = "/members", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+		
+		@PostMapping(path = "/members", consumes = "application/json", produces = "application/json") //shortcut or
+		
+		Web Service endpoint to be able to return information in either XML or JSON format. Depending on the value of the Accept Header. 
+		***Note that if you want your Web Service endpoint to return MediaType.APPLICATION_XML_VALUE then your HTTP Request must contain the Accept header with
+		 a value application/xml like in the curl example below:
+	
+	2.@GetMapping : 
+		@RequestMapping(value= "members/{id}" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE).
+	
+		@GetMapping(path = "members/{id}", produces = MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE)
+		
+	3.@PutMapping – Handle HTTP Put Requests
+	4.@DeleteMapping – Handle HTTP Delete Requests
+
+
+
+URI:
+	URI (uniform resource identifier) identifies a resource (text document, image file, etc) on internate either by location or by name or both. 
+	URL (uniform resource locator) is used to locate resources on the web.
+	URI is basically a name that indicate some kind of resource. And URL tells where the resources can be found.
+	Ex:
+	URI format--- <protocol>://<service-name>/<ResourceType>/<ResourceID> --> public://myfile.jpg
+	URL:--> http://sites/files/myfiles.jpg
+
+	The purpose of a URI is to locate a resource(s) on the server hosting the web service. A URI is of the following format-
+
+	<protocol>://<service-name>/<ResourceType>/<ResourceID>
+

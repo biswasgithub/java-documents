@@ -1,0 +1,35 @@
+When JVM starts up, it creates a heap area which is known as runtime data area. This is where all the objects (instances of class) are stored. 
+Since this area is limited, it is required to manage this area efficiently by removing the objects that are no longer in use.
+The process of removing unused objects from heap memory is known as Garbage collection.
+
+
+Garbage Collection is process to unreference or delete unused data from memory in java.
+Developer is not responsible to free unused memory from heap. It makes memory efficient.
+The main objective of java garbage collector is to destroy the unused memory from heap memory area.
+
+It makes java memory efficient because garbage collector removes the unreferenced objects from heap memory.
+
+Unreachable objects : An object is said to be unreachable if it doesn’t contain any reference to it. 
+Also note that objects which are part of island of isolation are also unreachable. 
+
+Eligibility for garbage collection:
+An object is said to be eligible for GC(garbage collection) iff it is unreachable.
+
+Once we made our objects eligible for garbage collection it may not destroy immediately by the garbage collector.
+Whenever java runs garbage collector then only objects will be destroyed. We can also request JVM to run Garbage Collector 
+Using System.gc() method.Then Garbage Collector calls finalize() method on the object to perform cleanup activities. 
+Once finalize() method completes, Garbage Collector destroys that object. protected void finalize() throws Throwable
+Note: Clean-up activity means closing the resources associated with that object like Database Connection.
+
+
+The heap is divided into three sections:
+
+Young Generation: Newly created objects start in the Young Generation. The Young Generation is further subdivided into an Eden space, where all new objects start,
+and two Survivor spaces, where objects are moved from Eden after surviving one garbage collection cycle. When objects are garbage collected
+from the Young Generation, it is a minor garbage collection event.
+
+Old Generation: Objects that are long-lived are eventually moved from the Young Generation to the Old Generation. When objects are garbage collected
+from the Old Generation, it is a major garbage collection event.
+
+Permanent Generation: Metadata such as classes and methods are stored in the Permanent Generation. Classes that are no longer in use may be 
+garbage collected from the Permanent Generation.

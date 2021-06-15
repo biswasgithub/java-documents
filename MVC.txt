@@ -1,0 +1,103 @@
+https://www.youtube.com/watch?v=JUZYCNbZfCA&list=PLA7e3zmT6XQXBymgbvBARnpeGaKpivAYd
+https://www.youtube.com/watch?v=PQmu752Ifn8
+http://websystique.com/springmvc/spring-4-mvc-helloworld-tutorial-annotation-javaconfig-full-example/
+
+A Spring MVC is a Java framework which is used to build web applications. It follows the Model-View-Controller design pattern. 
+It implements all the basic features of a core spring framework like Inversion of Control, Dependency Injection.
+
+
+When client send a request, this request first goes to web.xml. then web.xml send the request to the dispatcher-servlet called front controller.
+Then front controller will take help from handler mapping.This handller mapping scan the packages and tell the front controller
+the complete address of the controller that generate the data for client request. After finding appropriate controller then front controller 
+passes the request to that controller. Controller then executes the appropriate methods and generate data and create model object that hold the data.
+Controller may take help of other java classes(like service class) to generate data. After generating data controller send modelAndView
+object to the dispatcher-servlet.This modelAndView object hold the data and the view component name. But DispatcherServlet dont know the actual address of the view 
+where it is located in our application.Then dispatcher-servlet will take help from ViewResolver. This ViewResolver uses prefix and suffix value to find 
+the actual address of the view. Then it send this actualtual address to the front-controller. Then dispatcher-servlet send the modelAndView object to the
+view component. The view component is typically a jsp page that will be rendered to the client.     
+
+Model (M): Model’s responsibility is to manage the application’s data, business logic, and the business rules. 
+		   It is a POJO class which encapsulates the application data given by the controller
+View (V): A view is an output representation of the information, such as displaying information or reports to the user either as a text-form or as charts. 
+		  Views are usually the JSP templates written with Java Standard Tag Library (JSTL)
+Controller (C): Controller’s responsibility is to invoke the Models to perform the business logic and then update the view based on the model’s output. 
+				In the spring framework, the controller part is played by the Dispatcher Servlet
+
+1.Controller:
+	This means that class annotated with @Controller will also be automatically be detected by Spring container as part of container's component scanning process.
+	In Spring MVC, org.springframework.web.servlet.DispatcherServlet is the front controller class that initializes beans configurations and responsible to handle 
+	a different kind of client requests and generate data based on the request mappings. 
+	We can create a controller class by using @Controller annotation.
+
+
+
+
+
+
+ 
+There are 4 types of auto components scan annotation types:
+1. @Component annotation is used to denote a class as Component. It means that Spring framework will autodetect these classes for dependency injection
+when annotation-based configuration and classpath scanning is used. @Component indicates that a class might be a candidate for creating a bean. Its like putting a hand up.
+
+2.@Controller indicates a controller component in the presentation layer.
+A Controller class is responsible to handle a different kind of client requests based on the request mappings. It create data send it dispatcher-servlet as 
+ModelAndView object.We can create a controller class by using @Controller annotation.
+
+3.@Repository: indicates DAO component in the persistence layer. And this class provides the mechanism for retrieval, search, update and delete operation on objects.
+Note: we need spring-context dependencies.	
+
+4.@Service -indicates a Service component in the business layer. It provides some business functionalities. 
+Spring context will autodetect these classes when annotation-based configuration and classpath scanning is used.
+
+Spring needs to know which packages contain spring beans, otherwise you would have to register each bean individually. thats why we use @ComponentScan.
+@ComponentScan annotation is used with the @Configuration annotation means spring framework scan the packages for annotated component.
+Ex:@Configuration
+   @ComponentScan(basePackages = "com.websystique.springmvc")
+
+<context:component-scan base-package="com.mkyong.customer" /> : is used to activate annotations in beans already registered in the application context also 
+ it enable auto scanning feature in Spring.
+ The base-package is indicate where are your components stored, Spring will scan this folder and find out the bean (annotated with @Component)
+ and register it in Spring container.
+ Ex:<context:component-scan base-package="org.controller"/>
+ 
+Note: Use <context:component-scan base-package="com.mkyong.customer" /> in dispatcher-servlet.xml.
+	  Use @Autowired and @Component(@Controller, @Component, @Service, @Repository) with each other.	
+   
+ 
+xml-based configuration(dispatcher-servlet.xml): can be omitted if <context:component-scan> is specified. and is used to 
+activate annotations in beans already registered in the application context. Use when we define beans in xml file. 
+https://stackoverflow.com/questions/7414794/difference-between-contextannotation-config-vs-contextcomponent-scan
+
+
+
+ 
+ mvc:annotation-driven is used for enabling the Spring MVC components with its default configurations. If you dont include mvc:annotation-driven also 
+ your MVC application would work if you have used the context:component-scan for creating the beans or defined the beans in your XML file. 
+ But, mvc:annotation-driven does some extra job on configuring the special beans that would not have been configured if you are not using this element 
+ in your XML file.
+ 
+ <mvc:annotation-driven />-- loading static resources
+ Ex: 	<mvc:resources location="/assets/" mapping="/resources/**" />
+ 
+ DispatcherServlet:https://www.edureka.co/blog/advanced-java-tutorial
+ DispatcherServlet is the front controller in the Spring MVC application and it loads the spring bean configuration file and initialize
+ all the beans that are configured. If annotations are enabled, it also scans the packages and configure any bean annotated with
+ @Component, @Controller, @Repository or @Service annotations.
+ The DispatcherServlet is the core of Spring Web MVC framework. It handles all the HTTP requests and responses. 
+ The DispatcherServlet receives the entry of handler mapping from the configuration file and forwards the request
+ to the controller. The controller then returns an object of Model And View. The DispatcherServlet checks the entry
+ of view resolver in the configuration file and calls the specified view component.
+ 
+ ViewResolver implementations are used to resolve the view pages by name. Usually we configure it in the spring bean
+ configuration file. For example: InternalResourceViewResolver is one of the implementation of ViewResolver interface 
+ and we are providing the view pages directory and suffix location through the bean properties. 
+ So if a controller handler method returns “home”, view resolver will use view page located at /WEB-INF/views/home.jsp. 
+ 
+ 
+ Where do you need @EnableWebMVC? (answer)
+	The @EnableWebMvc annotation is required to enable Spring MVC when Java configuration is used to configure Spring MVC instead of XML. 
+	It is equivalent to <mvc: annotation-driven>  in XML configuration.
+	It enables support for @Controller-annotated classes that use @RequestMapping to map incoming requests to handler methods not already 
+	familiar with Spring's support for Java configuration
+ 
+ 
