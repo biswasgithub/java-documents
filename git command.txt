@@ -68,5 +68,10 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
-
 Solution: set remoti origin by usnig- $ git remote add origin https://github.com/biswasgithub/employee-consumer.git
+
+Problem: 
+	error: pathspec 'BRANCH-NAME' did not match any file(s) known to git.
+	ans: git remote update
+	git fetch 
+	git checkout -b <branch name>
