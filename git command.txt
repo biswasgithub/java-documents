@@ -27,9 +27,11 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 
 9. Delete branch:
 	$ git branch -d <branch>
+   Delete folder from github:
+   	$ git rm -r folder-name
 	
 10. Stage your changes:
-	$ git add . / git add -A  (adds the entire project to the staging area)
+	$ git add . / git add -A  (adds the entire project/all files to the staging area)
 	$ git add <fileName>  (Git moves all changes of <file> in the staging area to wait for the next commit.)
 	& git add <DirectoryName>  (adds the entire <directory> to the staging area) 
 
@@ -39,7 +41,8 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 12. Push your changes to GitHub:
 	$ git push <remote> <branch>
 	$ git push origin amend-my-name
-	$ git push -f origin master
+	$ git push -f origin master  (-f | force)
+	$ git push -u origin master  ([-u | --set-upstream])
 
 13. set origin: add existion project to gitHub:(sequnce of step:1->2->3->4->->5->6->7 )
 	$ git remote add origin <url of the branch>
@@ -58,16 +61,22 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 	In git bash write: git pull  then open GitGUI and commit.
 
 15. commit exiting project folder to git:
-	git init
-	git status
-	git add -A
-	git status
-	git commit -m "initial commit"
-	git remote add origin remoteRepositoryURL
-	git push -f origin master
+	$ git init
+	$ git status
+	$ git add -A
+	$ git status
+	$ git commit -m "initial commit"
+	$ git remote add origin remoteRepositoryURL
+	$ git push -f origin master
 
 16. commit exiting project to git:
 	git init -> git add . -> git commit -m "initial commit" -> git remote add origin remoteRepositoryURL -> git remote -v -> git push -f origin master
+17. Copy all files/folder from one master to feature:
+	$ git checkout feature
+	$ git merge master
+	$ git commit -m "copy all file/folder from master"
+	$ git push origin feature
+ 
 
 ******Note:
 Problem:
