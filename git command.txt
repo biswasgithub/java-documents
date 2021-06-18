@@ -6,7 +6,7 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 2. initialized the repository:
 	$ git init
 
-3. Check status:
+3. Check status: check whether the file has been added to index or not
 	$ git status 
 
 4. List all your branches:
@@ -24,6 +24,9 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 
 8. Confirm you are now working on that branch:
 	$ git branch
+	$ git branch -- merged  // show merged branch
+	$ git branch --no-merged  // show unmerge branch
+	$ git branch -v  // show last commited message
 
 9. Delete branch:
 	$ git branch -d <branch>
@@ -40,6 +43,7 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 
 11. Commit your changes:
 	$ git commit -m "Commit message" 
+	$ git commit -a -m "Commit msg"   // combination of add and commit
 
 12. Push your changes to GitHub:
 	$ git push <remote> <branch>
@@ -52,6 +56,8 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 	$ git remote add origin https://github.com/biswasgithub/employee-consumer.git
 
 14. git pull:
+	$ git pull origin master   // pull the code from master 
+	
 	When you are executing pull command it will execute two commands in background.
 				first fetch and then merge
 	Fetch command will download all files from remote repo to local repo.
@@ -89,6 +95,16 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 	$ git add file_name
 	$ git commit -m "resloved conflict"
 	$ git push origin my-branch
+19. show last commit:
+	$ git branch -v
+20. merge and resolved conflict:
+	A and B are working in defferent repo folder. They are both pulled the code from master. A change the controller.java file. Then A did add,commit and push the code into 	 master.
+	Now B also change the controller.java file in same line. Then B added and did comment. When B try to push the code the B's pull request will be rejected.
+	To solve this prolem:
+	$ git pull --rebase origin master  // will show conflict. Then solve the conflict.
+	$ git rebase --continue 
+	$ git push origin master
+
 
 ******Note:
 Problem:
