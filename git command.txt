@@ -74,12 +74,21 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 
 16. commit exiting project to git:
 	git init -> git add . -> git commit -m "initial commit" -> git remote add origin remoteRepositoryURL -> git remote -v -> git push -f origin master
-17. Copy all files/folder from one master to feature:
+17. Copy all files/folder from master to feature: (Don't apply this Because it will delete existing file of feature branch and copy all files from master branch)
 	$ git checkout feature
 	$ git merge master
 	$ git commit -m "copy all file/folder from master"
 	$ git push origin feature
- 
+ 18: Merge one branch to another branch and resolved conflict:
+ 	My-branch and his-branch have common file name controller.java. Now I have written some line of code 10 to 20 in controller. Then add and commit this file(not push).
+	Ram has written some line of code 15 to 25 in same controller file. Then add and commit this file(not push).
+	Now If I want to merge my-branch to his-branch then i will get conflict. Resolve this conflit and then add and commit this file. Then push.
+	$ git checkout my-branch
+	$ git merge his-branch   // will lead conflict
+	$ git merge --abort  // Rollback the changes and it will back its orevious state.
+	$ git add file_name
+	$ git commit -m "resloved conflict"
+	$ git push origin my-branch
 
 ******Note:
 Problem:
