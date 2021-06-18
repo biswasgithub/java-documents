@@ -57,7 +57,16 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 	
 	In git bash write: git pull  then open GitGUI and commit.
 
-15. commit exiting project to git:
+15. commit exiting project folder to git:
+	git init
+	git status
+	git add -A
+	git status
+	git commit -m "initial commit"
+	git remote add origin remoteRepositoryURL
+	git push -f origin master
+
+16. commit exiting project to git:
 	git init -> git add . -> git commit -m "initial commit" -> git remote add origin remoteRepositoryURL -> git remote -v -> git push -f origin master
 
 ******Note:
