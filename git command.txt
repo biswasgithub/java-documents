@@ -29,6 +29,9 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 	$ git branch -d <branch>
    Delete folder from github:
    	$ git rm -r folder-name
+	$ git add -A
+	$ git commit -m "delete file/folder"
+	$ git push -u origin master 
 	
 10. Stage your changes:
 	$ git add . / git add -A  (adds the entire project/all files to the staging area)
