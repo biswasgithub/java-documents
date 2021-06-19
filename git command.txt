@@ -29,7 +29,8 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 	$ git branch -v  // show last commited message
 
 9. Delete branch:
-	$ git branch -d <branch>
+	$ git branch -d <branch> / git branch -D <branch> (If error: The branch 'demo' is not fully merged. Then use git branch -D <branch>)
+	$ git push origin --delete {the_remote_branch} // delete branch from remote
    Delete folder from github:
    	$ git rm -r folder-name
 	$ git add -A
