@@ -243,6 +243,7 @@ New Spring MVC Request Annotations: available since Spring 4.3.
 		@PostMapping(path = "/members", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
 		
 		@PostMapping(path = "/members", consumes = "application/json", produces = "application/json") //shortcut or
+		@Consumes({"text/plain,text/html"})
 		
 		Web Service endpoint to be able to return information in either XML or JSON format. Depending on the value of the Accept Header. 
 		***Note that if you want your Web Service endpoint to return MediaType.APPLICATION_XML_VALUE then your HTTP Request must contain the Accept header with
