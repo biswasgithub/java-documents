@@ -31,11 +31,23 @@ Clone: git clone https://github.com/URL-TO-REPO-HERE
 9. Delete branch:
 	$ git branch -d <branch> / git branch -D <branch> (If error: The branch 'demo' is not fully merged. Then use git branch -D <branch>)
 	$ git push origin --delete {the_remote_branch} // delete branch from remote
-   Delete folder from github:
+   Delete folder from local:
    	$ git rm -r folder-name
 	$ git add -A
 	$ git commit -m "delete file/folder"
 	$ git push -u origin master 
+  Delete project folder from remote:
+  	$ git rm -r --cached  PhotoAppDiscoveryServer/
+	$ git commit -m "delete file/folder"
+	$ git push -u origin <branch-name>
+ Remove git from local-folder:
+ 	$ rm -rf .git
+	
+	
+	
+	
+ 
+	
 	
 10. Stage your changes:
 	$ git add . / git add -A  (adds the entire project/all files to the staging area)
