@@ -65,150 +65,198 @@ JAVA 8:
 		8. The max() operation
 		9. The reduce() operation
 
+****************intermediate Vs Terminal
 
-	Lazy Evaluation:
-	
-		For example, consider the findFirst() example we saw earlier. How many times is the map() operation performed here? 4 times, since the input array contains 4 elements?
-		@Test
-		public void whenFindFirst_thenGetFirstEmployeeInStream() {
-			Integer[] empIds = { 1, 2, 3, 4 };
+		1. Output: Output of intermediate operation is another stream whereas output of terminal operation is a collection, array or primitive.
+		2. Chaining: Stream operation pipeline can have as many as intermediate operators chained together but pipeline must end with terminal operator.
+
+		3. Lazy Evaluation: Intermediate operations are evaluated lazily whereas terminal operations are eager. The intermediate operations just remain as a pipeline,
+			and executed only when the terminal operation is executed
+		4. Pipeline: Stream operations pipeline can have many intermediate operations but only one terminal operation.
+
+
+			Lazy Evaluation:
+
+
+
+Map:
+		https://dzone.com/articles/how-to-use-map-filter-collect-of-stream-in-java-8
+		the map() is used to transform one object into other by applying a function. The map(Function mapper) method takes a Function, technically speaking,
+		an object of java.util.function.Function interface. This function is then applied to each element of Stream to convert it into the type you want.
+		Because we need to convert a String to an Integer, we can pass either the Integer.parseInt() or Integer.valueOf() method to the map() function. 
+		I have chosen the valueOf() method because of performance and caching.
+		
+		map() produces a new stream after applying a function to each element of the original stream. The new stream could be of different type.
+		The following example converts the stream of Integers into the stream of Employees:
+		
+		
+		The map() function is a method in the Stream class that represents a functional programming concept. In simple words, the map() is used to 
+		transform one object into other by applying a function.
+
+		That's why the Stream.map(Function mapper) takes a function as an argument.This function is then applied to each element of Stream to convert it into the type you want.
+		For example, by using the map() function, you can convert a list of String into a List of Integer by applying the Integer.valueOf() method to each String
+		on the input list.
+
+		All you need is a mapping function to convert one object to the other. Then, the map() function will do the transformation for you. 
+		It is also an intermediate Stream operation, which means you can call other Stream methods, like a filter, or collect on this to create
+		a chain of transformations.
+		
+		List<String> result11 = custList.stream().filter(s -> s.getSalary() > 40000)
+					.filter(s -> s.getId()> 30)
+					.map(x -> x.getName().toUpperCase())
+					.collect(Collectors.toList());
+				
+flatMap:
+			A stream can hold complex data structures like Stream<List<String>>, List<List<String>>. In cases like this, flatMap() helps us to flatten the data structure to simplify 
+			further operations:
 			
-			Employee employee = Stream.of(empIds)
-			  .map(employeeRepository::findById)
-			  .filter(e -> e != null)
-			  .filter(e -> e.getSalary() > 100000)
-			  .findFirst()
-			  .orElse(null);
+			map()-> data transform. Used for single list.
+			flatMap()-> data transform + flattering. and contains stream data. Used for nested list.
+			map()-> one to one mapping means when every customer have only one name, id, email then we can use map() to fetch that values.
+			flatMap()-> one to many mapping means when every customer have list of phone-number, list of address. then we can use flatMap() to fetch the list of phone-number for all customers.
 			
-			assertEquals(employee.getSalary(), new Double(200000));
-		}
-		Stream performs the map and two filter operations, one element at a time.
-		It first performs all the operations on id 1. Since the salary of id 1 is not greater than 100000, the processing moves on to the next element.
-		Id 2 satisfies both of the filter predicates and hence the stream evaluates the terminal operation findFirst() and returns the result.
-		No operations are performed on id 3 and 4.
+			Example: 
+						class Customer{
+			
+							int id;
+							String name;
+							double salary;
+							List<String> phone-number;
+							List<String> bookList;
+						}
+
+			using map()->>>>
+					List<String> books1 = listOfEmloyee.stream()
+												  .map(x->x.getPhone-numberList())     //  Stream<String>
+												  .collect(Collectors.toList()); 
+					output : list of list [[9002346571, 9007654312],[9002346571, 9007654312],[9002346571, 9007654312]] 
+					but we want List<String> of the phone-number.
+					
+			using flatMap()->>>>
+			
+								List<String> books1 = listOfEmloyee.stream()
+												  .flatMap(x->x.getPhone-numberList().stream())     //  Stream<String>
+												  .filter(x -> !x.toLowerCase().contains("123"))   //  filter 
+												  .collect(Collectors.toList()); 
+			
+							output : list of String [9002346571, 9007654312,9002346571, 9007654312,9002346571, 9007654312]
+
+filter:
+
+			The filter method, as its name suggests, filters elements based upon a condition you gave it. For example, if your list contains numbers 
+			and you only want numbers, you can use the filter method to only select a number that is fully divisible by two.
+
+			The filter method essentially selects elements based on a condition you provide. That's why the filter (Predicate condition) accepts
+			a Predicate object, which provides a function that is applied to a condition. If the condition evaluates true, the object is selected. 
+			Otherwise, it will be ignored.
+
+			Filters elements based upon a condition you gave it. The filter() method is also lazy, meaning it will not be evaluated until you call 
+			a reduction method, like collect.
+			
+							List<Customer> result = custList.stream()
+															.filter(s -> s.getSalary() > 40000)
+															.filter(s -> s.getBookList().contains("Java"))
+															.collect(Collectors.toList());
+									result.forEach(s->System.out.println(s.getId()));
+
+							List<String> result1 = custList.stream()
+										   .filter(s -> s.getSalary() > 40000)
+										   .filter(s -> s.getBookList().contains("Java"))
+										   .map(x -> x.getName())
+										   .collect(Collectors.toList());
+									System.out.println(result1);
+
+sorted: 
+		sorted() operation – this sorts the stream elements based on the comparator passed we pass into it.
 		
-  ******Processing streams lazily allows avoiding examining all the data when that’s not necessary. This behavior becomes even more important when the input
-		stream is infinite and not just very large.
+			// ***************sort collection using Comparator.comparaing()***********
 
+			List<Customer> result3 = custList.stream()
+											 .filter(s -> s.getSalary() > 40000)
+											 .sorted(Comparator.comparing(Customer::getId).reversed())
+											 .collect(Collectors.toList());
 
-Map: https://dzone.com/articles/how-to-use-map-filter-collect-of-stream-in-java-8
-	the map() is used to transform one object into other by applying a function. The map(Function mapper) method takes a Function, technically speaking,
-	an object of java.util.function.Function interface. This function is then applied to each element of Stream to convert it into the type you want.
-	Because we need to convert a String to an Integer, we can pass either the Integer.parseInt() or Integer.valueOf() method to the map() function. 
-	I have chosen the valueOf() method because of performance and caching.
-	
-	map() produces a new stream after applying a function to each element of the original stream. The new stream could be of different type.
-	The following example converts the stream of Integers into the stream of Employees:
-	
-	
-	The map() function is a method in the Stream class that represents a functional programming concept. In simple words, the map() is used to 
-	transform one object into other by applying a function.
+							result3.forEach(s->System.out.println(s.getId() +" "+s.getName()));
 
-	That's why the Stream.map(Function mapper) takes a function as an argument.This function is then applied to each element of Stream to convert it into the type you want.
-	For example, by using the map() function, you can convert a list of String into a List of Integer by applying the Integer.valueOf() method to each String
-	on the input list.
-
-	All you need is a mapping function to convert one object to the other. Then, the map() function will do the transformation for you. 
-	It is also an intermediate Stream operation, which means you can call other Stream methods, like a filter, or collect on this to create
-	a chain of transformations.
-	
-	@Test
-	public void whenMapIdToEmployees_thenGetEmployeeStream() {
-		Integer[] empIds = { 1, 2, 3 };
+			List<Customer> result4 = custList.stream()
+											 .filter(s -> s.getSalary() > 40000)
+											 .sorted(Comparator.comparing(Customer::getName).thenComparing(Customer::getId))
+											 .collect(Collectors.toList());
+							result4.forEach(s->System.out.println(s.getId() +" "+s.getName()));
 		
-		List<Employee> employees = Stream.of(empIds)
-		  .map(employeeRepository::findById)
-		  .collect(Collectors.toList());
+		Note that short-circuiting will not be applied for sorted(). This means, in the example above, even if we had used findFirst() after the sorted(),
+		the sorting of all the elements is done before applying the findFirst(). This happens because the operation cannot know what the first element is 
+		until the entire stream is sorted.
 		
-		assertEquals(employees.size(), empIds.length);
-	}
-	Here, we obtain an Integer stream of employee ids from an array. Each Integer is passed to the function employeeRepository::findById() – 
-	which returns the corresponding Employee object; this effectively forms an Employee stream.
+				// ***************sort collection using sort() without stream()***********
 
-filter: The filter method, as its name suggests, filters elements based upon a condition you gave it. For example, if your list contains numbers 
-		and you only want numbers, you can use the filter method to only select a number that is fully divisible by two.
-
-		The filter method essentially selects elements based on a condition you provide. That's why the filter (Predicate condition) accepts
-		a Predicate object, which provides a function that is applied to a condition. If the condition evaluates true, the object is selected. 
-		Otherwise, it will be ignored.
-
-		Filters elements based upon a condition you gave it. The filter() method is also lazy, meaning it will not be evaluated until you call 
-		a reduction method, like collect
+			Comparator<Customer> idComparator = (Customer z1, Customer z2) -> z1.getId() - z2.getId();
+			Comparator<Customer> nameComparator = (Customer z1, Customer z2) -> z1.getName().compareTo(z2.getName());
+			custList.sort(idComparator);
+			custList.sort(idComparator.reversed());
+			custList.forEach(s-> System.out.println(s.getId()));
 
 Collect:
-	We saw how collect() works in the previous example; its one of the common ways to get stuff out of the stream once we are done with all the processing:
-
-	@Test
-	public void whenCollectStreamToList_thenGetList() {
-		List<Employee> employees = empList.stream().collect(Collectors.toList());
+		We saw how collect() works in the previous example; its one of the common ways to get stuff out of the stream once we are done with all the processing:
 		
-		assertEquals(empList, employees);
-	}
-	collect() performs mutable fold operations (repackaging elements to some data structures and applying some additional logic, concatenating them, etc.) 
-	on data elements held in the Stream instance.
+		collect() performs mutable fold operations (repackaging elements to some data structures and applying some additional logic, concatenating them, etc.) 
+		on data elements held in the Stream instance.
 
-	The strategy for this operation is provided via the Collector interface implementation. In the example above, we used the toList collector to collect
-	all Stream elements into a List instance.
+		The strategy for this operation is provided via the Collector interface implementation. In the example above, we used the toList collector to collect
+		all Stream elements into a List instance.
 
 toArray:
-	We saw how we used collect() to get data out of the stream. If we need to get an array out of the stream, we can simply use toArray():
+		We saw how we used collect() to get data out of the stream. If we need to get an array out of the stream, we can simply use toArray():
 
-	@Test
-	public void whenStreamToArray_thenGetArray() {
-		Employee[] employees = empList.stream().toArray(Employee[]::new);
+		@Test
+		public void whenStreamToArray_thenGetArray() {
+			Employee[] employees = empList.stream().toArray(Employee[]::new);
 
-		assertThat(empList.toArray(), equalTo(employees));
-	}
-	The syntax Employee[]::new creates an empty array of Employee – which is then filled with elements from the stream.
+			assertThat(empList.toArray(), equalTo(employees));
+		}
+		The syntax Employee[]::new creates an empty array of Employee – which is then filled with elements from the stream.
 
-flatMap:
-	A stream can hold complex data structures like Stream<List<String>>. In cases like this, flatMap() helps us to flatten the data structure to simplify 
-	further operations:
-
-	@Test
-	public void whenFlatMapEmployeeNames_thenGetNameStream() {
-		List<List<String>> namesNested = Arrays.asList( 
-		  Arrays.asList("Jeff", "Bezos"), 
-		  Arrays.asList("Bill", "Gates"), 
-		  Arrays.asList("Mark", "Zuckerberg"));
-
-		List<String> namesFlatStream = namesNested.stream()
-		  .flatMap(Collection::stream)
-		  .collect(Collectors.toList());
-
-		assertEquals(namesFlatStream.size(), namesNested.size() * 2);
-	}
-	Notice how we were able to convert the Stream<List<String>> to a simpler Stream<String> – using the flatMap() API.
 
 	
 allMatch, anyMatch, and noneMatch:
 
-	List<Integer> intList = Arrays.asList(2, 4, 5, 6, 8);   
-    boolean allEven = intList.stream().allMatch(i -> i % 2 == 0);
-    boolean oneEven = intList.stream().anyMatch(i -> i % 2 == 0);
-    boolean noneMultipleOfThree = intList.stream().noneMatch(i -> i % 3 == 0);	
+				boolean result22 = custList.stream().anyMatch(x -> x.getName().startsWith("A"));
+				boolean result23 = custList.stream().noneMatch(x -> x.getName().startsWith("A"));
 
-	allMatch() checks if the predicate is true for all the elements in the stream. Here, it returns false as soon as it encounters 5, which is not divisible by 2.
+				List<Integer> intList = Arrays.asList(2, 4, 5, 6, 8);   
+				boolean allEven = intList.stream().allMatch(i -> i % 2 == 0);
+				boolean oneEven = intList.stream().anyMatch(i -> i % 2 == 0);
+				boolean noneMultipleOfThree = intList.stream().noneMatch(i -> i % 3 == 0);	
 
-	anyMatch() checks if the predicate is true for any one element in the stream. Here, again short-circuiting is applied and true is returned immediately after the first element.
+		allMatch() checks if the predicate is true for all the elements in the stream. Here, it returns false as soon as it encounters 5, which is not divisible by 2.
 
-	noneMatch() checks if there are no elements matching the predicate. Here, it simply returns false as soon as it encounters 6, which is divisible by 3.
+		anyMatch() checks if the predicate is true for any one element in the stream. Here, again short-circuiting is applied and true is returned immediately after the first element.
 
-Stream short-circuit operations: Some operations are deemed short-circuiting operations. Short-circuiting operations allow computations on infinite streams 
-	to complete in finite time:
-	Stream.anyMatch():
-	Stream.findFirst()
+		noneMatch() checks if there are no elements matching the predicate. Here, it simply returns false as soon as it encounters 6, which is divisible by 3.
 
-sorted: 
-	sorted() operation – this sorts the stream elements based on the comparator passed we pass into it.
+
+findFirst(),anyMatch(), count():
+
+
+		Stream short-circuit operations: Some operations are deemed short-circuiting operations. Short-circuiting operations allow computations on infinite streams 
+		to complete in finite time:
+
 	
-	List<Employee> employees = empList.stream()
-      .sorted((e1, e2) -> e1.getName().compareTo(e2.getName()))
-      .collect(Collectors.toList());
 	
-****Note that short-circuiting will not be applied for sorted(). This means, in the example above, even if we had used findFirst() after the sorted(),
-	the sorting of all the elements is done before applying the findFirst(). This happens because the operation cannot know what the first element is 
-	until the entire stream is sorted.
+			Optional<Integer> resultName = custList.stream()
+												   .filter(x -> x.getName().startsWith("A"))
+												   .map(x -> x.getId())
+												   .findFirst();
+							 System.out.println(resultName.get());
+							 
+			long count = custList.stream()
+								 .filter(x -> x.getName().startsWith("A"))
+								 .count();
+							System.out.println(count);
+
+
+
+
 
 parallel Stream:
 	Streams can be executed in parallel to increase runtime performance on large amount of input elements.
@@ -217,36 +265,67 @@ parallel Stream:
 	Aggregate operations iterate over and process these sub-streams in parallel and then combine the results.
 
 
+********************************** Lambda Expression
 
-2. Functional Interfaces in Java 8 Stream:
+	A lambda expression is an inline code that implements a functional interface without creating a concrete or anonymous class. A lambda expression is basically an anonymous method.
 
-	It is not mandatory to use it, but it’s best practice to use it with functional interfaces to avoid addition of extra methods accidentally. 
-	If the interface is annotated with @FunctionalInterface annotation and we try to have more than one abstract method, it throws compiler error.
+	It is a method that can be created without instantiating a class.
+
+			Syntax:
+			(parameters) -> expression
+			or
+			(parameters) -> { statements; }
+
+	Advantages of Lambda Expression
+	1. Fewer Lines of Code − One of the most benefits of a lambda expression is to reduce the amount of code. We know that lambda expressions can be used only with a functional interface.
+	   For instance, Runnable is a functional interface, so we can easily apply lambda expressions.
+	   
+	2. Higher Efficiency − By using Stream API and lambda expressions, we can achieve higher efficiency (parallel execution) in case of bulk operations on collections. 
+	   Also, lambda expression helps in achieving the internal iteration of collections rather than external iteration.
+	   
+	   //Using anonymous Class
+	   Runnable r1 = new Runnable(){
+		@Override
+		public void run(){
+		System.out.println("Prior to Java 8");
+		}
+	   }
+	   
+	   // using Lambda
+	   Runnable r1 = ()-> {
+		System.out.println("From Java 8");
+	   }
+
+********************************** Functional Interfaces in Java 8 Stream:
+
+A functional interface in Java is an interface that contains only a single abstract (unimplemented) method. A functional interface can contain default and static methods 
+which do have an implementation.
+
+ @FunctionalInterface annotation is added so that we can mark an interface as functional interface. It is not mandatory to use it, but it’s best practice to use it with 
+ functional interfaces to avoid addition of extra methods accidentally. If the interface is annotated with @FunctionalInterface annotation and we try to have more than 
+ one abstract method, it throws compiler error.
 
 	The major benefit of java 8 functional interfaces is that we can use lambda expressions to instantiate them and avoid using bulky anonymous class implementation.
 
-	Points:
-	i. only one abstract method is allowed in any functional interface. Second abstract method is not not permitted in a functional interface. 
-		If we remove @FunctionInterface annotation then we are allowed to add another abstract method, but it will make the interface non-functional interface.
+public interface MyFunctionalInterface {
+    public void execute();
+}
 
-	ii. A functional interface is valid even if the @FunctionalInterface annotation would be omitted. It is only for informing the compiler to enforce
-		single abstract method inside interface.
-		Conceptually, a functional interface has exactly one abstract method. Since default methods have an implementation, they are not abstract. 
-		Since default methods are not abstract you’re free to add default methods to your functional interface as many as you like.
 
-				@FunctionalInterface
-				public interface MyFirstFunctionalInterface 
-				{
-					public void firstWork();
-				 
-					default void doSomeMoreWork1(){
-					//Method body
-					}
-				 
-					default void doSomeMoreWork2(){
-					//Method body
-					}
-				}
+public interface MyFunctionalInterface2{
+    public void execute();
+
+    public default void print(String text) {
+        System.out.println(text);
+    }
+
+    public static void print(String text, PrintWriter writer) throws IOException {
+        writer.write(text);
+    }
+}
+
+functional interfaces: Runnable, Comparable, Callable, Predicate.
+
 	iii. If an interface declares an abstract method overriding one of the public methods of java.lang.Object, that also does not count toward the 
 		interface’s abstract method count since any implementation of the interface will have an implementation from java.lang.Object or elsewhere.
 		e.g. Comparator is a functional interface even though it declared two abstract methods. 
@@ -294,22 +373,42 @@ Optional:
 		 
 	
 	
-	Java Optional Methods: 
+	*************************************Java Optional Methods: 
+	It is used to represent a value is present or absent. The main advantage of this new construct is that No more too many null checks and NullPointerException. 
+	It avoids any runtime NullPointerExceptions.
+	
+	Advantages of Java 8 Optional:
+
+	Null checks are not required.
+	No more NullPointerException at run-time.
+	We can develop clean and neat APIs.
+	No more Boiler plate code
 
 	1. static optional empty(): Create an empty Optional. Optional<Person> p = Optional.empty(); 
 	2. Optional.of(p) : Create an Optional with a non-null value. If you pass null in of(), then a NullPointerException is thrown immediately.
 	
 			Address home = new Address(block, city, state, country, pincode); 
-			Optional<Address> = Optional.of(home);
+			Optional<Address> aa = Optional.of(home);
+			Optional<Address> bb= Optional.of(null); // NullPointerException
+			
+			if(bb.isPresent()) {
+			System.out.println("bb");
+		}
 
 		This code will return an Optional of Address object but value i.e. home must be not-null. In case the object is null then Optional.of() method will throw NullPointerException.
 		
-	3. Optional.ofNullable() to create an Optional object that may hold a null value. If parameter is null, the resulting Optional object would be empty 
+	3.Optional.ofNullable() method returns a Non-empty Optional if a value present in the given object. Otherwise returns empty Optional.. If parameter p is null, the resulting Optional object would be empty 
 		(remember that value is absent; don’t read it null).  but it won't throw the NullPointerException.
 		
-		Optional<Integer> possible = Optional.ofNullable(null);
-		//or
-		Optional<Person> op = Optional.ofNullable(p);
+			Optional<Address> aa = Optional.ofNullable(home);
+			Optional<Address> bb= Optional.ofNullable(null); 
+		
+			// don’t throw NullPointerException 
+			
+			if(bb.isPresent()) {
+			System.out.println("hello");
+		}
+
 	4. boolean isPresent(): It return true if there is a value present, otherwise false.
 
 			Optional<String> empty = Optional.empty();
